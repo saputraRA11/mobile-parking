@@ -47,6 +47,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.parking.R
 import com.example.parking.ui.component.CardImage
 import com.example.parking.ui.component.CustomIcon
@@ -58,7 +60,8 @@ import kotlin.math.round
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
+    navController: NavHostController = rememberNavController(),
+    modifier: Modifier = Modifier,
 ){
     val stateColor = remember {
         mutableStateOf(false)

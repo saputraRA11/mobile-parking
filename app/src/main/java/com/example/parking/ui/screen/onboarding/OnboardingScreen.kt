@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.parking.ui.component.ButtonCircle
 import com.example.parking.ui.component.ImageParkName
 import com.example.parking.ui.component.SliderOnboarding
@@ -21,6 +23,7 @@ import com.example.parking.ui.theme.BluePark
 
 @Composable
 fun OnboardingScreen(
+    navController: NavHostController = rememberNavController(),
     modifier:Modifier = Modifier
 ) {
     Scaffold(
@@ -43,14 +46,18 @@ fun OnboardingScreen(
             ) {
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {},
+                    onClick = {
+                        navController.navigate("login")
+                    },
                     text = "Masuk",
                     backgroundColor = ButtonDefaults.buttonColors(containerColor = BluePark)
                 )
 
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {},
+                    onClick = {
+                        navController.navigate("register")
+                    },
                     text = "Pengguna Baru? Buat akun",
                     backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
                     isOutlined = true,

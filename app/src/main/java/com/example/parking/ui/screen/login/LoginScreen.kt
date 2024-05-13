@@ -31,15 +31,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.parking.R
 import com.example.parking.ui.component.ButtonCircle
 import com.example.parking.ui.component.CustomIcon
 import com.example.parking.ui.component.CustomInput
 import com.example.parking.ui.component.Greeting
+import com.example.parking.ui.navigation.Screen
 import com.example.parking.ui.theme.BluePark
 
 @Composable
-fun LoginScreen(){
+fun LoginScreen(
+    navController: NavHostController = rememberNavController(),
+){
     val phoneNumber = remember {
         mutableStateOf(TextFieldValue(""))
     }
@@ -56,7 +61,10 @@ fun LoginScreen(){
                     color = Color.Black,
                     IconVector = Icons.Default.KeyboardArrowLeft,
                     isOutlined = false,
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier.size(50.dp),
+                    effect = {
+                        navController.navigateUp()
+                    }
                 )
 
                 CustomIcon(
@@ -75,14 +83,18 @@ fun LoginScreen(){
             ) {
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(Screen.Validation.route)
+                    },
                     text = "Masuk",
                     backgroundColor = ButtonDefaults.buttonColors(containerColor = BluePark)
                 )
 
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(Screen.Register.route)
+                    },
                     text = "Pengguna Baru? Buat akun",
                     backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
                     isOutlined = true,

@@ -1,5 +1,6 @@
 package com.example.parking.ui.component
 
+import android.service.autofill.CustomDescription
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -34,11 +35,12 @@ fun ImageParkName(
 @Composable
 fun CustomImage(
     modifier: Modifier = Modifier,
-    id:Int = R.drawable.logo_name
+    id:Int = R.drawable.logo_name,
+    description: String = ""
 ) {
     Image(
         painter = painterResource(id = id),
-        contentDescription = null,
+        contentDescription = description,
         modifier = modifier
     )
 }
