@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -81,34 +82,26 @@ fun CardImage(
         }
 
         Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier
-                    .background(BluePark)
-                    .fillMaxWidth()
-                    .weight(4f)
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .background(BluePark)
+                .fillMaxWidth()
+                .weight(4f)
         ) {
             CustomImage(
                 id = R.drawable.qrcode,
                 modifier = Modifier
                     .padding(top = 20.dp)
                     .size(250.dp)
-<<<<<<< HEAD
                     .weight(4f),
                 description = "QRCODE"
-=======
-                    .weight(4f)
->>>>>>> e34a88696fc424b1aee576dc270e09c194a5e85f
             )
 
             Row (
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = modifier
-<<<<<<< HEAD
-                    .padding(top = 10.dp)
-=======
                     .padding(top = 20.dp)
->>>>>>> e34a88696fc424b1aee576dc270e09c194a5e85f
                     .fillMaxWidth()
             ) {
                 // circle
@@ -257,6 +250,17 @@ fun CardImage(
                     .padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
                     .fillMaxWidth(),
             )
+        }
+    }
+}
+
+@Composable
+fun ScrollableCardImage(
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
+        item {
+            CardImage(modifier)
         }
     }
 }
