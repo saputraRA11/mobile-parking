@@ -1,7 +1,9 @@
 package com.example.parking.ui.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.parking.ui.theme.BluePark
 
 @Composable
@@ -23,15 +26,29 @@ fun ButtonCircle(
     isOutlined:Boolean = false,
     text:String = "",
     backgroundColor:ButtonColors = ButtonDefaults.buttonColors(),
-    border:BorderStroke = BorderStroke(1.dp,Color.Black)
+    border:BorderStroke = BorderStroke(1.dp,Color.Black),
+    textAlign:Arrangement.Horizontal = Arrangement.Center,
+    trailingIcon: @Composable () -> Unit = {},
+    fontSize:Int = 15
 ) {
     if(!isOutlined) {
         Button(
             modifier = modifier,
             onClick = onClick,
-            colors = backgroundColor
+            colors = backgroundColor,
         ) {
-            Text(text = text)
+            Row(
+                horizontalArrangement = textAlign,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = text,
+                    fontSize = (fontSize).sp
+                )
+
+                trailingIcon()
+            }
         }
     } else {
         OutlinedButton(
@@ -40,7 +57,18 @@ fun ButtonCircle(
             colors = backgroundColor,
             border = border
         ) {
-            Text(text = text)
+            Row(
+                horizontalArrangement = textAlign,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = text,
+                    fontSize = (fontSize).sp
+                )
+
+                trailingIcon()
+            }
         }
     }
 
@@ -67,7 +95,7 @@ fun ButtonPreview(){
             text = "Pengguna Baru? Buat akun",
             backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
             isOutlined = true,
-            border = BorderStroke(1.dp, BluePark)
+            border = BorderStroke(1.dp, BluePark),
         )
     }
 
