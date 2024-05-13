@@ -22,13 +22,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.parking.ui.component.ButtonCircle
 import com.example.parking.ui.component.CustomIcon
 import com.example.parking.ui.component.OtpInput
+import com.example.parking.ui.navigation.Screen
 import com.example.parking.ui.theme.BluePark
 
 @Composable
-fun ValidationScreen(){
+fun ValidationScreen(
+    navController: NavHostController = rememberNavController(),
+){
     val otpState = remember {
         mutableStateOf("")
     }
@@ -44,7 +49,10 @@ fun ValidationScreen(){
                     color = Color.Black,
                     IconVector = Icons.Default.KeyboardArrowLeft,
                     isOutlined = false,
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier.size(50.dp),
+                    effect = {
+                        navController.navigateUp()
+                    }
                 )
             }
         },
@@ -56,7 +64,9 @@ fun ValidationScreen(){
             ) {
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(Screen.Home.createRoute("saputra"))
+                    },
                     text = "Kirim Otp",
                     backgroundColor = ButtonDefaults.buttonColors(containerColor = BluePark)
                 )

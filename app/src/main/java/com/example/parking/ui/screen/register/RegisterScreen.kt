@@ -40,15 +40,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.parking.R
 import com.example.parking.ui.component.ButtonCircle
 import com.example.parking.ui.component.CustomIcon
 import com.example.parking.ui.component.CustomInput
 import com.example.parking.ui.component.Greeting
+import com.example.parking.ui.navigation.Screen
 import com.example.parking.ui.theme.BluePark
 
 @Composable
 fun RegisterScreen(
+    navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
     val phoneNumber = remember {
@@ -80,7 +84,10 @@ fun RegisterScreen(
                         color = Color.Black,
                         IconVector = Icons.Default.KeyboardArrowLeft,
                         isOutlined = false,
-                        modifier = Modifier.size(50.dp)
+                        modifier = Modifier.size(50.dp),
+                         effect = {
+                            navController.navigateUp()
+                         }
                     )
 
                      CustomIcon(
@@ -99,14 +106,18 @@ fun RegisterScreen(
             ) {
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(Screen.Onboarding.route)
+                    },
                     text = "Daftar",
                     backgroundColor = ButtonDefaults.buttonColors(containerColor = BluePark)
                 )
 
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(Screen.Login.route)
+                    },
                     text = "Sudah punya akun? Masuk",
                     backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
                     isOutlined = true,

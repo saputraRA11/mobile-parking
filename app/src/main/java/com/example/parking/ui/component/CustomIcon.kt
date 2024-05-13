@@ -35,10 +35,14 @@ fun CustomIcon(
     description:String = "",
     isOutlined:Boolean = true,
     borderSize:Dp = 1.dp,
+    effect:() -> Unit = {}
 ) {
     if(isOutlined) {
         Box(
             modifier = modifier
+                .clickable {
+                    effect()
+                }
                 .border(borderSize, color = color, shape = RoundedCornerShape(20.dp)),
             contentAlignment = Alignment.Center,
         ) {
@@ -55,6 +59,9 @@ fun CustomIcon(
             contentDescription = description,
             tint = color,
             modifier = modifier
+                .clickable {
+                    effect()
+                }
         )
     }
 }

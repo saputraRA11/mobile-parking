@@ -8,7 +8,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.parking.ui.navigation.Screen
+import com.example.parking.ui.screen.home.HomeScreen
+import com.example.parking.ui.screen.login.LoginScreen
 import com.example.parking.ui.screen.onboarding.OnboardingScreen
+import com.example.parking.ui.screen.register.RegisterScreen
+import com.example.parking.ui.screen.validation.ValidationScreen
 
 @Composable
 fun ParkingApp(
@@ -20,11 +24,33 @@ fun ParkingApp(
         startDestination = Screen.Onboarding.route
     ) {
         composable(Screen.Onboarding.route) {
-            OnboardingScreen()
+            OnboardingScreen(
+                navController
+            )
         }
 
         composable(Screen.Home.route) {
+            HomeScreen(
+                navController
+            )
+        }
 
+        composable(Screen.Login.route) {
+            LoginScreen(
+                navController
+            )
+        }
+
+        composable(Screen.Register.route) {
+            RegisterScreen(
+                navController
+            )
+        }
+
+        composable(Screen.Validation.route){
+            ValidationScreen(
+                navController
+            )
         }
     }
 }
