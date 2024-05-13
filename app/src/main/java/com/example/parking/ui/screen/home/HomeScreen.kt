@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.parking.R
+import com.example.parking.ui.component.CardImage
 import com.example.parking.ui.component.CustomIcon
 import com.example.parking.ui.component.ImageParkName
 import com.example.parking.ui.component.ProfileImage
@@ -100,7 +101,7 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier
-                        .background(if(!stateColor.value) BluePark else Color.White)
+                        .background(if (!stateColor.value) BluePark else Color.White)
                         .shadow(elevation = 0.6.dp)
                         .weight(1f)
                         .height(100.dp)
@@ -125,7 +126,7 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier
-                        .background(if(stateColor.value) BluePark else Color.White)
+                        .background(if (stateColor.value) BluePark else Color.White)
                         .border(
                             brush = Brush.verticalGradient(
                                 listOf(
@@ -136,7 +137,7 @@ fun HomeScreen(
                         )
                         .height(100.dp)
                         .weight(1f)
-                        .clickable {  stateColor.value = true}
+                        .clickable { stateColor.value = true }
                 ) {
                     CustomIcon(
                         color = if(!stateColor.value) Color.Black else Color.White,
@@ -162,8 +163,13 @@ fun HomeScreen(
         Column(
             modifier = modifier
                 .padding(innerPadding)
+                .padding(15.dp)
+                .border(0.dp,Color.Transparent)
+                .fillMaxSize()
         ) {
-
+            CardImage(
+                modifier = modifier
+            )
         }
     }
 }

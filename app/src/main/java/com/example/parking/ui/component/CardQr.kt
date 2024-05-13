@@ -93,14 +93,22 @@ fun CardImage(
                 modifier = Modifier
                     .padding(top = 20.dp)
                     .size(250.dp)
+<<<<<<< HEAD
                     .weight(4f),
                 description = "QRCODE"
+=======
+                    .weight(4f)
+>>>>>>> e34a88696fc424b1aee576dc270e09c194a5e85f
             )
 
             Row (
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = modifier
+<<<<<<< HEAD
                     .padding(top = 10.dp)
+=======
+                    .padding(top = 20.dp)
+>>>>>>> e34a88696fc424b1aee576dc270e09c194a5e85f
                     .fillMaxWidth()
             ) {
                 // circle
