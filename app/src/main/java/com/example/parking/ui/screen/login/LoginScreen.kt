@@ -47,7 +47,9 @@ fun LoginScreen(){
     Scaffold (
         topBar = {
             Row (
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .padding(horizontal = 5.dp, vertical = 10.dp)
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
                 CustomIcon(
@@ -67,7 +69,9 @@ fun LoginScreen(){
         },
         bottomBar = {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .padding(horizontal = 5.dp, vertical = 10.dp)
+                    .fillMaxWidth()
             ) {
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
@@ -88,7 +92,6 @@ fun LoginScreen(){
         },
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 5.dp, vertical = 20.dp)
     ) {
             innerPadding ->
         Column(

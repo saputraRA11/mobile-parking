@@ -26,13 +26,20 @@ fun OnboardingScreen(
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .padding(20.dp),
+            ,
         topBar = {
-            ImageParkName()
+            Column(
+                modifier = modifier
+                .padding(20.dp)
+            ) {
+                ImageParkName()
+            }
         },
         bottomBar = {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxWidth()
             ) {
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),

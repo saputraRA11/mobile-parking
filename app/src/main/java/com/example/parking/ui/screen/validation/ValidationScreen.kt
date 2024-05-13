@@ -35,7 +35,9 @@ fun ValidationScreen(){
     Scaffold (
         topBar = {
             Row (
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .padding(horizontal = 5.dp, vertical = 10.dp)
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
                 CustomIcon(
@@ -48,7 +50,9 @@ fun ValidationScreen(){
         },
         bottomBar = {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .padding(horizontal = 5.dp, vertical = 80.dp)
+                    .fillMaxWidth()
             ) {
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
@@ -60,7 +64,6 @@ fun ValidationScreen(){
         },
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 5.dp, end = 5.dp, top = 20.dp, bottom = 80.dp)
     ) {
             innerPadding ->
         Column(

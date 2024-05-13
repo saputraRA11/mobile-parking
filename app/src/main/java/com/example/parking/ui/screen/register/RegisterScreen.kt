@@ -71,7 +71,9 @@ fun RegisterScreen(
     Scaffold (
         topBar = {
                  Row (
-                     modifier = Modifier.fillMaxWidth(),
+                     modifier = Modifier
+                         .padding(horizontal = 5.dp, vertical = 10.dp)
+                         .fillMaxWidth(),
                      horizontalArrangement = Arrangement.SpaceBetween
                  ){
                      CustomIcon(
@@ -91,7 +93,9 @@ fun RegisterScreen(
         },
         bottomBar = {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .padding(horizontal = 5.dp, vertical = 10.dp)
+                    .fillMaxWidth()
             ) {
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
@@ -112,7 +116,6 @@ fun RegisterScreen(
         },
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 5.dp, vertical = 20.dp)
     ) {
         innerPadding ->
         Column(
