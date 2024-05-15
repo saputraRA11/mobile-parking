@@ -249,12 +249,12 @@ fun RegisterScreen(
 
                     },
                     saveState = nik,
+                    keyboardType = KeyboardType.Number,
                     singleLine = true,
+                    isNumber = true,
                     maxLimit = 12,
-                    modifier = modifier
-                        .fillMaxWidth(),
-                    fontSize = 16.sp,
-                    isNumber = true
+                    modifier = Modifier
+                        .fillMaxWidth()
                 )
             }
 
