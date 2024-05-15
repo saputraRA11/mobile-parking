@@ -119,7 +119,8 @@ fun CustomInput(
     keyboardType:KeyboardType = KeyboardType.Text,
     saveState:  MutableState<TextFieldValue>,
     isNumber:Boolean = false,
-    isIconDisabled:Boolean = true
+    isIconDisabled:Boolean = true,
+    enabled:Boolean = true
     ) {
 
     TextField(
@@ -158,6 +159,7 @@ fun CustomInput(
         ),
         shape = shape,
         singleLine = singleLine,
+        enabled = enabled,
         modifier = modifier,
     )
 }

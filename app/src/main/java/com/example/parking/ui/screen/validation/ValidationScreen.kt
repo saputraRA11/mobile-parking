@@ -33,6 +33,7 @@ import com.example.parking.ui.theme.BluePark
 @Composable
 fun ValidationScreen(
     navController: NavHostController = rememberNavController(),
+    phone:String = ""
 ){
     val otpState = remember {
         mutableStateOf("")
@@ -65,7 +66,7 @@ fun ValidationScreen(
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        navController.navigate(Screen.Home.createRoute("saputra"))
+                        navController.navigate(Screen.Home.createRoute(phone))
                     },
                     text = "Kirim Otp",
                     backgroundColor = ButtonDefaults.buttonColors(containerColor = BluePark)

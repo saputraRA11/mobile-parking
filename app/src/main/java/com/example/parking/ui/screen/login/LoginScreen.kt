@@ -84,7 +84,7 @@ fun LoginScreen(
                 ButtonCircle(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        navController.navigate(Screen.Validation.route)
+                        navController.navigate(Screen.Validation.createRoute(phoneNumber.value.text ?: ""))
                     },
                     text = "Masuk",
                     backgroundColor = ButtonDefaults.buttonColors(containerColor = BluePark)

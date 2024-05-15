@@ -1,19 +1,16 @@
 package com.example.parking.ui.component
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,7 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,15 +28,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,68 +39,68 @@ import androidx.compose.ui.zIndex
 import com.example.parking.R
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.DarkBlue
+import com.example.parking.ui.utils.QrCodeGenerator
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CardImage(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    phone: String = "kosong"
 ){
     var expanded by remember { mutableStateOf(false) }
     val icon = if(expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
+
+    // 0 -> non aktif, 1 konfirmasi , 2 karcis aktif
+
+    val status = remember {
+        mutableStateOf(0)
+    }
+
     Column (
         modifier = modifier
-            .clip(RoundedCornerShape(15.dp))
-            .fillMaxSize()
+            .clip(RoundedCornerShape(20.dp))
     ){
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = modifier
+            modifier = Modifier
                 .background(DarkBlue)
                 .fillMaxWidth()
-                .padding(40.dp)
+                .padding(20.dp)
         ) {
             Text(
                 text = "Karcis Digital",
                 color = Color.White,
-                fontSize = 30.sp,
+                style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.W600
             )
             Text(
                 text = "Tampilkan kode ini ke aplikasi pemindai",
                 color = Color.White,
+                style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.W300
             )
         }
 
         Column(
-                verticalArrangement = Arrangement.SpaceBetween,
+                verticalArrangement = Arrangement.spacedBy(30.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier
+                modifier = Modifier
                     .background(BluePark)
-                    .fillMaxWidth()
-                    .weight(4f)
+                    .fillMaxSize()
+                    .padding(vertical = 10.dp)
         ) {
             CustomImage(
-                id = R.drawable.qrcode,
+                painter = QrCodeGenerator(content = phone),
                 modifier = Modifier
-                    .padding(top = 20.dp)
-                    .size(250.dp)
-<<<<<<< HEAD
-                    .weight(4f),
+                    .fillMaxWidth(0.8f)
+                    .fillMaxHeight(0.5f)
+                ,
                 description = "QRCODE"
-=======
-                    .weight(4f)
->>>>>>> e34a88696fc424b1aee576dc270e09c194a5e85f
             )
 
             Row (
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = modifier
-<<<<<<< HEAD
-                    .padding(top = 10.dp)
-=======
-                    .padding(top = 20.dp)
->>>>>>> e34a88696fc424b1aee576dc270e09c194a5e85f
+                modifier = Modifier
                     .fillMaxWidth()
             ) {
                 // circle
@@ -151,112 +143,150 @@ fun CardImage(
             }
 
             FlowRow (
-                horizontalArrangement = Arrangement.spacedBy(60.dp),
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 maxItemsInEachRow = 2,
-                modifier = modifier
-                    .padding(20.dp)
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
             ){
                 Column(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = modifier
+                    modifier = Modifier
                         .weight(1f)
                 ) {
                     Text(
                         text = "Status Karcis",
-                        fontSize = 22.sp,
                         color = Color.White,
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.W600
                     )
                     Text(
-                        text = "Tidak Aktif" ,
-                        fontSize = 14.sp,
+                        text = if(status.value == 0) "Tidak Aktif" else if(status.value == 1) "Konfirmasi" else "Aktif",
                         color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.W300
                     )
                 }
 
-                Column(
-                    modifier = modifier
-                        .weight(1f)
-                ) {
-                    Text(
-                        text = "Pembayaran",
-                        fontSize = 22.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.W600
-                    )
+                if(status.value != 0) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        Text(
+                            text = "Pembayaran",
+                            fontSize = 22.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.W600
+                        )
+                        ButtonCircle(
+                            onClick = {},
+                            text = "Tunai",
+                            textAlign = Arrangement.SpaceBetween,
+                            backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = DarkBlue),
+                            isOutlined = false,
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            trailingIcon = {
+                                CustomIcon(
+                                    color = Color.Black,
+                                    IconVector = icon,
+                                    isOutlined = true,
+                                    modifier = Modifier
+                                        .clickable {
+                                            expanded = !expanded
+                                        },
+                                    borderSize = 2.dp,
+                                )
+                            },
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.W400
+                        )
+                    }
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        Text(
+                            text = "Lokasi",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.W600
+                        )
+                        Text(
+                            text = "Bojongsoang" ,
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.W300
+                        )
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        Text(
+                            text = "Pemindai",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.W600
+                        )
+                        Text(
+                            text = "Kasir Bojongsoang" ,
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.W300
+                        )
+                    }
+                }
+
+            }
+
+            if(status.value == 1) {
+                ButtonCircle(
+                    onClick = {
+                              status.value = 2
+                    },
+                    text = "Konfirmasi",
+                    backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
+                    isOutlined = false,
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                        .fillMaxWidth(),
+                )
+            } else {
+                ButtonCircle(
+                    onClick = {
+                              if(status.value == 0) {
+                                  status.value = 1
+                              } else {
+                                  status.value = 0
+                              }
+                    },
+                    text = "Check Status",
+                    backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
+                    isOutlined = false,
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                        .fillMaxWidth(),
+                    enable = true
+                )
+
+                if(status.value == 2) {
                     ButtonCircle(
                         onClick = {},
-                        text = "Tunai",
-                        textAlign = Arrangement.SpaceBetween,
+                        text = "Check Status",
                         backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
                         isOutlined = false,
-                        modifier = modifier
+                        modifier = Modifier
+                            .padding(horizontal = 20.dp)
                             .fillMaxWidth(),
-                        trailingIcon = {
-                            CustomIcon(
-                                color = Color.Black,
-                                IconVector = icon,
-                                isOutlined = true,
-                                modifier = Modifier
-                                    .clickable {
-                                        expanded = !expanded
-                                    },
-                                borderSize = 2.dp,
-                            )
-                        },
-                        fontSize = 17
-                    )
-                }
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = modifier
-                        .weight(1f)
-                ) {
-                    Text(
-                        text = "Lokasi",
-                        fontSize = 22.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.W600
-                    )
-                    Text(
-                        text = "Bojongsoang" ,
-                        fontSize = 14.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.W300
-                    )
-                }
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    modifier = modifier
-                        .weight(1f)
-                ) {
-                    Text(
-                        text = "Pemindai",
-                        fontSize = 22.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.W600
-                    )
-                    Text(
-                        text = "Kasir Bojongsoang" ,
-                        fontSize = 14.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.W300
+                        enable = false
                     )
                 }
             }
-
-            ButtonCircle(
-                onClick = {},
-                text = "Karcis Belum Aktif",
-                backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
-                isOutlined = false,
-                modifier = modifier
-                    .padding(bottom = 20.dp, start = 20.dp, end = 20.dp)
-                    .fillMaxWidth(),
-            )
         }
     }
 }

@@ -84,9 +84,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     //coroutine support
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0") //viewModelScope
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0") //liveData
-    implementation("androidx.room:room-ktx:2.6.1")
+    implementation(libs.lifecycle.viewmodel.ktx) //viewModelScope
+    implementation(libs.androidx.lifecycle.livedata.ktx) //liveData
+    implementation(libs.androidx.room.ktx)
 
     // Dark Theme
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -95,4 +95,12 @@ dependencies {
     // Slider
     implementation("com.google.accompanist:accompanist-pager:0.28.0")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.28.0")
+
+    // CameraX
+    implementation("androidx.camera:camera-camera2:1.0.2")
+    implementation("androidx.camera:camera-lifecycle:1.0.2")
+    implementation("androidx.camera:camera-view:1.0.0-alpha31")
+
+    // Zxing
+    implementation("com.google.zxing:core:3.3.3")
 }
