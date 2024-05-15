@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.parking.ui.navigation.Screen
 import com.example.parking.ui.screen.home.HomeScreen
 import com.example.parking.ui.screen.login.LoginScreen
@@ -29,12 +31,6 @@ fun ParkingApp(
             )
         }
 
-        composable(Screen.Home.route) {
-            HomeScreen(
-                navController
-            )
-        }
-
         composable(Screen.Login.route) {
             LoginScreen(
                 navController
@@ -47,9 +43,29 @@ fun ParkingApp(
             )
         }
 
-        composable(Screen.Validation.route){
+        composable(
+            Screen.Validation.route,
+            arguments = listOf(navArgument("phone") {
+                type = NavType.StringType
+            })
+        ){
+            val phone = it.arguments?.getString("phone") ?: ""
             ValidationScreen(
-                navController
+                navController,
+                phone = phone
+            )
+        }
+
+        composable(
+            Screen.Home.route,
+            arguments = listOf(navArgument("phone") {
+                type = NavType.StringType
+            })
+        ) {
+            val phone = it.arguments?.getString("phone") ?: ""
+            HomeScreen(
+                navController,
+                phone = phone
             )
         }
     }

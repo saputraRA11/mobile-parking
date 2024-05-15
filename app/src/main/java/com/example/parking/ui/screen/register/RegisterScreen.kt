@@ -290,7 +290,8 @@ fun RegisterScreen(
                         .fillMaxWidth(),
                     fontSize = 16.sp,
                     isNumber = true,
-                    isIconDisabled = false
+                    isIconDisabled = false,
+                    enabled = false
                 )
 
                 DropdownMenu(

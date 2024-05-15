@@ -14,6 +14,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,13 +31,17 @@ fun ButtonCircle(
     border:BorderStroke = BorderStroke(1.dp,Color.Black),
     textAlign:Arrangement.Horizontal = Arrangement.Center,
     trailingIcon: @Composable () -> Unit = {},
-    fontSize:Int = 15
+    style: TextStyle = TextStyle.Default,
+    fontWeight: FontWeight = FontWeight.Normal,
+    enable:Boolean = true
+
 ) {
     if(!isOutlined) {
         Button(
             modifier = modifier,
             onClick = onClick,
             colors = backgroundColor,
+            enabled = enable
         ) {
             Row(
                 horizontalArrangement = textAlign,
@@ -44,7 +50,8 @@ fun ButtonCircle(
             ) {
                 Text(
                     text = text,
-                    fontSize = (fontSize).sp
+                    style = style,
+                    fontWeight = fontWeight
                 )
 
                 trailingIcon()
@@ -64,7 +71,8 @@ fun ButtonCircle(
             ) {
                 Text(
                     text = text,
-                    fontSize = (fontSize).sp
+                    style = style,
+                    fontWeight = fontWeight
                 )
 
                 trailingIcon()
