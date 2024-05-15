@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -27,30 +28,29 @@ fun SliderOnboarding(
 ) {
     val pagerState = rememberPagerState(initialPage = 0)
     val imageSlider = listOf(
+        painterResource(id = R.drawable.onboarding_6),
         painterResource(id = R.drawable.onboarding_1),
-        painterResource(id = R.drawable.onboarding_2),
         painterResource(id = R.drawable.onboarding_3)
     )
 
-        HorizontalPager(
-            count = imageSlider.size,
-            state = pagerState,
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            modifier = modifier
-                .fillMaxWidth(),
-        ) {
-            pageIndex ->
+    HorizontalPager(
+        count = imageSlider.size,
+        state = pagerState,
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        modifier = modifier.fillMaxWidth(),
+    ) { pageIndex ->
+        Image(
+            painter = imageSlider[pageIndex],
+            contentDescription = "Image On Boarding",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .aspectRatio(1f)
+        )
+    }
 
-                Image(
-                    painter = imageSlider[pageIndex],
-                    contentDescription = "",
-                    modifier = modifier
-                        .fillMaxWidth(),
 
-                )
-        }
-
-        HorizontalPagerIndicator(
+    HorizontalPagerIndicator(
             pagerState = pagerState,
             modifier = modifier
                 .padding(16.dp),
