@@ -120,7 +120,9 @@ fun CustomInput(
     saveState:  MutableState<TextFieldValue>,
     isNumber:Boolean = false,
     isIconDisabled:Boolean = true,
-    enabled:Boolean = true
+    readonly:Boolean = false,
+    enabled:Boolean = true,
+    fontWeight: FontWeight = FontWeight.Normal
     ) {
 
     TextField(
@@ -131,9 +133,10 @@ fun CustomInput(
                 else if(!isNumber) saveState.value = it
             }
         },
+        readOnly = readonly ,
         textStyle = TextStyle(
             fontSize = fontSize,
-            fontWeight = FontWeight.Bold,
+            fontWeight = fontWeight,
             textAlign = textAlign
         ),
         colors = TextFieldDefaults.textFieldColors(
@@ -141,26 +144,21 @@ fun CustomInput(
             unfocusedIndicatorColor = if(isIndicatorTransparent) Color.Transparent else unfocusedIndicatorsColor
         ),
         trailingIcon = {
-//            if(saveState.value.text.isNotEmpty() && isIconDisabled) {
-//                trailing()
-//            } else if(!isIconDisabled){
-//                trailing()
-//            }
-                       if(isIconDisabled) {
-                           if(saveState.value.text.isNotEmpty()) {
-                               trailing()
-                           }
-                       } else {
-                           trailing()
-                       }
+           if(isIconDisabled) {
+               if(saveState.value.text.isNotEmpty()) {
+                   trailing()
+               }
+           } else {
+               trailing()
+           }
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType
         ),
         shape = shape,
         singleLine = singleLine,
-        enabled = enabled,
         modifier = modifier,
+        enabled = enabled
     )
 }
 
