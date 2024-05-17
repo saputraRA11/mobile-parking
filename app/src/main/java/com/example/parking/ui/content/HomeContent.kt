@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,9 +16,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,15 +47,26 @@ import com.example.parking.ui.component.ProfileImage
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.GreyShadow
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
     isCustomer:Boolean = false,
-    phone: String = "kosong"
+    phone: String = "kosong",
+    onRefresh: () -> Unit = {}
 ) {
     val isKarcis = remember {
         mutableStateOf(true)
     }
+
+    val refreshing = remember {
+        mutableStateOf(false)
+    }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = refreshing.value,
+        onRefresh = onRefresh
+    )
+
     Scaffold (
         topBar = {
             Row (
@@ -63,7 +80,6 @@ fun HomeScreenContent(
                     .fillMaxWidth()
                     .padding(20.dp)
             ){
-
                 if(isCustomer) {
                     HeadLineUser(modifier = modifier)
                 } else {
@@ -155,24 +171,49 @@ fun HomeScreenContent(
         Column(
             modifier = Modifier
         ) {
+
             if(isKarcis.value) {
                 if(isCustomer) {
-                    CardImage(
-                        phone = phone,
-                        modifier = Modifier
+                    Box(
+                        Modifier
+                            .pullRefresh(pullRefreshState)
                             .verticalScroll(rememberScrollState())
-                            .padding(innerPadding)
-                            .fillMaxSize()
-                            .padding(20.dp)
-                    )
+                    ) {
+                        // Display data
+                        CardImage(
+                            phone = phone,
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .fillMaxSize()
+                                .padding(20.dp)
+                        )
+                        PullRefreshIndicator(
+                            refreshing = refreshing.value,
+                            pullRefreshState,
+                            Modifier.align(Alignment.TopCenter)
+                        )
+                    }
+
                 } else {
-                    CardCamera(
-                        modifier = Modifier
+                    Box(
+                        Modifier
+                            .pullRefresh(pullRefreshState)
                             .verticalScroll(rememberScrollState())
+                    ) {
+                        // Display data
+                        CardCamera(
+                        modifier = Modifier
                             .padding(innerPadding)
                             .fillMaxSize()
                             .padding(20.dp)
-                    )
+                        )
+                        PullRefreshIndicator(
+                            refreshing = refreshing.value,
+                            pullRefreshState,
+                            Modifier.align(Alignment.TopCenter)
+                        )
+                    }
+
                 }
             }
 

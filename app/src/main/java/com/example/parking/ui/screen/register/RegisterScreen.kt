@@ -1,36 +1,50 @@
 package com.example.parking.ui.screen.register
 
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.requiredSizeIn
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MenuDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +54,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.parking.R
@@ -71,6 +86,19 @@ fun RegisterScreen(
     val roles = LocalContext.current.resources.getStringArray(R.array.roles).toList()
     var selectedText = remember { mutableStateOf(TextFieldValue("")) }
     val icon = if(expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(key1 = expanded) {
+        if(expanded) {
+            scrollState.animateScrollTo(scrollState.maxValue, SpringSpec(0.5f,Spring.StiffnessLow))
+        } else {
+            scrollState.animateScrollTo(0, SpringSpec(0.5f,Spring.StiffnessLow))
+        }
+    }
+
+    SideEffect {
+
+    }
 
     Scaffold (
         topBar = {
@@ -132,7 +160,7 @@ fun RegisterScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
                 .fillMaxSize(),
         ) {
             Greeting(
@@ -261,12 +289,13 @@ fun RegisterScreen(
             Column(
                 modifier = Modifier
                     .padding(15.dp)
+                    .padding(bottom = (if(expanded) 200 else 0).dp)
                     .fillMaxWidth(),
             ) {
                 Text(
                     text = "Peran",
                     style = MaterialTheme.typography.h5,
-                    fontWeight = FontWeight.W500
+                    fontWeight = FontWeight.W800
                 )
 
                 CustomInput(
@@ -277,7 +306,7 @@ fun RegisterScreen(
                             isOutlined = true,
                             modifier = Modifier
                                 .clickable {
-                                    expanded = !expanded
+                                    expanded = true
                                 },
                             borderSize = 3.dp,
                         )
@@ -287,28 +316,39 @@ fun RegisterScreen(
                     singleLine = true,
                     maxLimit = 12,
                     modifier = modifier
+                        .clickable {
+                            expanded = true
+                        }
                         .fillMaxWidth(),
                     fontSize = 16.sp,
                     isNumber = true,
                     isIconDisabled = false,
-                    enabled = false
+                    enabled = true,
+                    readonly = true
                 )
 
                 DropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = {expanded = false},
-                    modifier = Modifier.fillMaxWidth(),
-                    offset = DpOffset(y= (-100).dp,x=0.dp)
+                    onDismissRequest = {expanded = !expanded},
+                    modifier = Modifier
+                        .requiredSizeIn(maxHeight = 500.dp)
+                        .fillMaxWidth(),
                 )
                 {
                     roles.forEach { label ->
                         DropdownMenuItem(
-                            text = { Text(text = label) },
+                            text = {
+                                Text(
+                                    text = label,
+                                    fontWeight = FontWeight.W500
+                                )
+                            },
                             onClick = {
                                 selectedText.value = TextFieldValue(label)
                                 expanded = false
                             },
-                            modifier = Modifier
+                            modifier = Modifier,
+                            colors = androidx.compose.material3.MenuDefaults.itemColors(Color.Black)
                         )
                     }
                 }

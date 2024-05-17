@@ -193,7 +193,7 @@ fun CardCamera(
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
                         .fillMaxHeight(0.5f)
-                        .padding(50.dp)
+                        .padding(30.dp)
                     ,
                 )
             } else {
