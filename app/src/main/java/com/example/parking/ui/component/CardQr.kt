@@ -21,6 +21,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,16 +46,15 @@ import com.example.parking.ui.utils.QrCodeGenerator
 @Composable
 fun CardImage(
     modifier: Modifier = Modifier,
-    phone: String = "kosong"
+    phone: String = "kosong",
+    status:MutableState<Int> = remember {
+        mutableStateOf(0)
+    }
 ){
     var expanded by remember { mutableStateOf(false) }
     val icon = if(expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
 
     // 0 -> non aktif, 1 konfirmasi , 2 karcis aktif
-
-    val status = remember {
-        mutableStateOf(0)
-    }
 
     Column (
         modifier = modifier
@@ -228,56 +228,68 @@ fun CardImage(
                             .weight(1f)
                     ) {
                         Text(
-                            text = "Pemindai",
+                            text = "Kendaraan",
                             color = Color.White,
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.W600
                         )
-                        Text(
-                            text = "Kasir Bojongsoang" ,
-                            color = Color.White,
+
+                        ButtonCircle(
+                            onClick = {},
+                            text = "Mobil",
+                            textAlign = Arrangement.SpaceBetween,
+                            backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = DarkBlue),
+                            isOutlined = false,
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            trailingIcon = {
+                                CustomIcon(
+                                    color = Color.Black,
+                                    IconVector = icon,
+                                    isOutlined = true,
+                                    modifier = Modifier
+                                        .clickable {
+                                            expanded = !expanded
+                                        },
+                                    borderSize = 2.dp,
+                                )
+                            },
                             style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.W300
+                            fontWeight = FontWeight.W400
                         )
                     }
                 }
 
             }
 
-            if(status.value == 1) {
-                ButtonCircle(
-                    onClick = {
-                              status.value = 2
-                    },
-                    text = "Konfirmasi",
-                    backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
-                    isOutlined = false,
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .fillMaxWidth(),
-                )
-            } else {
-                ButtonCircle(
-                    onClick = {
-                              if(status.value == 0) {
-                                  status.value = 1
-                              } else {
-                                  status.value = 0
-                              }
-                    },
-                    text = "Check Status",
-                    backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
-                    isOutlined = false,
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .fillMaxWidth(),
-                    enable = true
-                )
-
-                if(status.value == 2) {
+            when(status.value) {
+                0 -> {
                     ButtonCircle(
                         onClick = {},
-                        text = "Check Status",
+                        text = "Karcis Belum Aktif",
+                        backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
+                        isOutlined = false,
+                        modifier = Modifier
+                            .padding(horizontal = 20.dp)
+                            .fillMaxWidth(),
+                        enable = false
+                    )
+                }
+                1 -> {
+                    ButtonCircle(
+                        onClick = {},
+                        text = "Konfirmasi",
+                        backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
+                        isOutlined = false,
+                        modifier = Modifier
+                            .padding(horizontal = 20.dp)
+                            .fillMaxWidth(),
+                    )
+                }
+                2 -> {
+                    ButtonCircle(
+                        onClick = {},
+                        text = "Karcis Aktif",
                         backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
                         isOutlined = false,
                         modifier = Modifier
