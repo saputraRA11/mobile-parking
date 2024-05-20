@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +22,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,18 +37,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.parking.R
 import com.example.parking.ui.component.CardCamera
-import com.example.parking.ui.component.CardImage
 import com.example.parking.ui.component.CustomIcon
-import com.example.parking.ui.component.HeadLineUser
-import com.example.parking.ui.component.ImageParkGuidance
-import com.example.parking.ui.component.ImageParkName
-import com.example.parking.ui.component.ProfileImage
+import com.example.parking.ui.component.HeadLineGuidance
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.GreyShadow
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun HomeScreenContent(
+fun GuidanceScreenContent(
     modifier: Modifier = Modifier,
     phone: String = "kosong",
     onRefresh: () -> Unit = {}
@@ -70,11 +64,11 @@ fun HomeScreenContent(
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshing.value,
         onRefresh = {
-           if(status.value == 2) {
+            if(status.value == 2) {
                 status.value = 0
-           } else {
-               status.value++
-           }
+            } else {
+                status.value++
+            }
 
             onRefresh()
         }
@@ -93,7 +87,7 @@ fun HomeScreenContent(
                     .fillMaxWidth()
                     .padding(20.dp)
             ){
-                HeadLineUser(modifier = modifier)
+                HeadLineGuidance(modifier = modifier)
             }
         },
         bottomBar = {
@@ -188,9 +182,7 @@ fun HomeScreenContent(
                         .verticalScroll(rememberScrollState())
                 ) {
                     // Display data
-                    CardImage(
-                        status = status,
-                        phone = phone,
+                    CardCamera(
                         modifier = Modifier
                             .padding(innerPadding)
                             .fillMaxSize()
@@ -207,10 +199,8 @@ fun HomeScreenContent(
         }
     }
 }
-
-
 @Preview(showBackground = true)
 @Composable
-fun HomeCustomerContentPreview(){
-    HomeScreenContent()
+fun GuidanceContentPreview(){
+    GuidanceScreenContent()
 }

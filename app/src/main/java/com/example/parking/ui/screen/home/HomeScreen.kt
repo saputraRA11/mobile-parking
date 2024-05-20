@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.parking.di.Injection
 import com.example.parking.ui.common.UiState
+import com.example.parking.ui.content.GuidanceScreenContent
 import com.example.parking.ui.content.HomeScreenContent
 import com.example.parking.ui.utils.ViewModelFactory
 
@@ -38,17 +39,11 @@ fun HomeScreen(
                     user ->
                     when(user?.role?.name) {
                         "PELANGGAN" -> {
-                            HomeScreenContent(
-                                isCustomer = true,
-                                phone = user.phone
-                            )
+                            HomeScreenContent()
                         }
 
                         "PENJAGA" -> {
-                            HomeScreenContent(
-                                isCustomer = false,
-                                phone = user.phone
-                            )
+                            GuidanceScreenContent()
                         }
                     }
                 }
