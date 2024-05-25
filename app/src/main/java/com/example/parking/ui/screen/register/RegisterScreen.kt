@@ -210,7 +210,7 @@ fun RegisterScreen(
                         keyboardType = KeyboardType.Number,
                         singleLine = true,
                         isNumber = true,
-                        maxLimit = 12,
+                        maxLimit = 13,
                         modifier = Modifier
                             .fillMaxWidth()
                     )
@@ -280,7 +280,7 @@ fun RegisterScreen(
                     keyboardType = KeyboardType.Number,
                     singleLine = true,
                     isNumber = true,
-                    maxLimit = 12,
+                    maxLimit = 16,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
