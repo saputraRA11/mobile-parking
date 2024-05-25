@@ -81,6 +81,34 @@ fun ProfileImage(
     )
 }
 
+@Composable
+fun ManagementName(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.management),
+        contentDescription = null,
+        modifier = modifier,
+        contentScale = ContentScale.FillBounds
+    )
+}
+
+@Composable
+fun ProfileManagementImage(
+    modifier: Modifier = Modifier,
+    id:Int = R.drawable.managementimage,
+) {
+    Image(
+        painter = painterResource(id = id),
+        contentDescription = null,
+        contentScale = ContentScale.FillBounds,
+        modifier = modifier
+            .clip(CircleShape)
+
+        ,
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ProfilePreview() {

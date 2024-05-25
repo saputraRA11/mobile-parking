@@ -35,7 +35,7 @@ fun MonthlyStatistics(
             Text(
                 text = "Total pendapatan",
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(3f)
             )
             Text(
                 text = "Rp${formatNumber(income)}",
@@ -50,7 +50,7 @@ fun MonthlyStatistics(
             Text(
                 text = "Total pengguna",
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(3f)
             )
             Text(
                 text = formatNumber(user),

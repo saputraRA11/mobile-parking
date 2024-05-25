@@ -10,6 +10,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.parking.ui.navigation.Screen
+import com.example.parking.ui.screen.Form.AddAreaFormScreen
+import com.example.parking.ui.screen.Form.AddGuardFormScreen
+import com.example.parking.ui.screen.Form.EditParkingAreaScreen
+import com.example.parking.ui.screen.GuardList.ManagementGuardScreen
 import com.example.parking.ui.screen.home.HomeScreen
 import com.example.parking.ui.screen.login.LoginScreen
 import com.example.parking.ui.screen.onboarding.OnboardingScreen
@@ -19,7 +23,7 @@ import com.example.parking.ui.screen.validation.ValidationScreen
 @Composable
 fun ParkingApp(
     modifier: Modifier = Modifier,
-    navController:NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
@@ -48,7 +52,7 @@ fun ParkingApp(
             arguments = listOf(navArgument("phone") {
                 type = NavType.StringType
             })
-        ){
+        ) {
             val phone = it.arguments?.getString("phone") ?: ""
             ValidationScreen(
                 navController,
@@ -68,6 +72,46 @@ fun ParkingApp(
                 phone = phone
             )
         }
+
+        composable(
+            Screen.UpdateArea.route,
+            arguments = listOf(navArgument("alamat") {
+                type = NavType.StringType
+            })
+        ) {
+            val alamat = it.arguments?.getString("alamat") ?: ""
+            EditParkingAreaScreen(alamat = alamat, navController = navController)
+        }
+
+        composable(
+            Screen.GuardList.route,
+            arguments = listOf(navArgument("phone") {
+                type = NavType.StringType
+            })
+        ) {
+            val phone = it.arguments?.getString("phone") ?: ""
+            ManagementGuardScreen(phone = phone, navController = navController)
+        }
+
+        composable(
+            Screen.AddArea.route,
+            arguments = listOf(navArgument("phone") {
+                type = NavType.StringType
+            })
+        ) {
+            val phone = it.arguments?.getString("phone") ?: ""
+            AddAreaFormScreen(phone = phone, navController = navController)
+        }
+
+        composable(
+            Screen.AddGuard.route,
+            arguments = listOf(navArgument("phone") {
+                type = NavType.StringType
+            })
+        ) {
+            val phone = it.arguments?.getString("phone") ?: ""
+            AddGuardFormScreen(phone = phone, navController = navController)
+        }
     }
 }
 
@@ -75,6 +119,6 @@ fun ParkingApp(
     showBackground = true
 )
 @Composable
-fun ParkingAppPreview(){
+fun ParkingAppPreview() {
     ParkingApp()
 }

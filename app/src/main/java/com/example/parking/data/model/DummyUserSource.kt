@@ -13,6 +13,12 @@ object DummyUserSource {
             name = "Pangeran Jonathan",
             phone="82171558690",
             role = Roles.PENJAGA
+        ),
+        User(
+            profile = "",
+            name = "Fauzan Ramadhana Sadikin",
+            phone="81271076622",
+            role = Roles.PENGELOLA
         )
     )
 }

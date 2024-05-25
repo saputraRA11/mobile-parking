@@ -12,6 +12,8 @@ import com.example.parking.di.Injection
 import com.example.parking.ui.common.UiState
 import com.example.parking.ui.content.GuidanceScreenContent
 import com.example.parking.ui.content.HomeScreenContent
+import com.example.parking.ui.content.Management
+import com.example.parking.ui.content.ManagementGuard
 import com.example.parking.ui.utils.ViewModelFactory
 
 @Composable
@@ -44,6 +46,9 @@ fun HomeScreen(
 
                         "PENJAGA" -> {
                             GuidanceScreenContent()
+                        }
+                        "PENGELOLA" -> {
+                            Management(navController = navController)
                         }
                     }
                 }

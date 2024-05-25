@@ -35,3 +35,18 @@ fun HeadLineGuidance(modifier: Modifier) {
             .fillMaxWidth(0.7f)
     )
 }
+
+@Composable
+fun HeadLineManagement(modifier: Modifier) {
+    ManagementName(
+        modifier = modifier
+            .fillMaxHeight(0.06f)
+            .fillMaxWidth(0.6f)
+        ,
+    )
+    ProfileManagementImage(
+        modifier = modifier
+            .fillMaxHeight(0.07f)
+            .fillMaxWidth(0.5f)
+    )
+}

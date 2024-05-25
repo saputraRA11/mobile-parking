@@ -35,22 +35,34 @@ import androidx.compose.ui.unit.sp
 import com.example.parking.ui.theme.BluePark
 
 @Composable
-fun FabMenu() {
+fun FabMenu(
+    modifier: Modifier = Modifier,
+    listGuard: ()-> Unit = {},
+    addArea: ()-> Unit = {},
+    addGuard: ()-> Unit = {}
+) {
     var expanded by remember { mutableStateOf(false) }
 
     Box(
-        Modifier
-            .fillMaxSize()
+        modifier = modifier
             .padding(25.dp),
-        contentAlignment = Alignment.BottomEnd
     ) {
         Column(
             horizontalAlignment = Alignment.End
         ) {
             if (expanded) {
-                FloatingActionButtonMenuItem("Daftar Penjaga", Icons.Default.List, onClick = { /* Handle click */ })
-                FloatingActionButtonMenuItem("Tambah Penjaga", Icons.Default.Person, onClick = { /* Handle click */ })
-                FloatingActionButtonMenuItem("Tambah Area", Icons.Default.Home, onClick = { /* Handle click */ })
+                FloatingActionButtonMenuItem(
+                    "Daftar Penjaga",
+                    Icons.Default.List,
+                    onClick = { listGuard() })
+                FloatingActionButtonMenuItem(
+                    "Tambah Penjaga",
+                    Icons.Default.Person,
+                    onClick = { addGuard() })
+                FloatingActionButtonMenuItem(
+                    "Tambah Area",
+                    Icons.Default.Home,
+                    onClick = { addArea() })
             }
             FloatingActionButton(
                 onClick = { expanded = !expanded },
@@ -97,5 +109,5 @@ fun FloatingActionButtonMenuItem(text: String, icon: ImageVector, onClick: () ->
 @Preview(showBackground = true)
 @Composable
 fun FabMenuPreview() {
-    FabMenu()
+    FabMenu(modifier = Modifier)
 }
