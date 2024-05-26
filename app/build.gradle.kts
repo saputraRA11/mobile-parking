@@ -103,4 +103,10 @@ dependencies {
 
     // Zxing
     implementation("com.google.zxing:core:3.3.3")
+
+    // Material 3 Core
+    implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.3.0")
+
+    // CALENDAR
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:1.3.0")
 }
