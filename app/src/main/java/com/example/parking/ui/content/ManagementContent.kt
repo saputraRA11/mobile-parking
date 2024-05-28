@@ -1,6 +1,7 @@
 package com.example.parking.ui.content
 
 import android.os.Build
+import android.util.Range
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -612,8 +613,9 @@ fun TimeSpanStatistics(
     var selectedOption by remember { mutableStateOf(options[0]) }
     var showCalendar by remember { mutableStateOf(false) }
     var showCalendarRange by remember { mutableStateOf(false) }
-    val selectedDatesRange = remember { mutableStateOf<List<LocalDate>>(listOf()) }
+    val selectedDatesRange = remember { mutableStateOf<Range<LocalDate>?>(null) }
     val selectedDate = remember { mutableStateOf<LocalDate?>(null) }
+
     Scaffold(
         topBar = {
             Column(
@@ -692,21 +694,22 @@ fun TimeSpanStatistics(
                     DatePicker(
                         selectedDate = selectedDate,
                         showDialog = showCalendar,
-                        closeSelection = {showCalendar = false}
+                        closeSelection = { showCalendar = false }
                     )
                 }
                 if (showCalendarRange) {
                     DatePickerRange(
                         showDialog = showCalendarRange,
-                        selectedDates = selectedDatesRange,
+                        selectedRange = selectedDatesRange,
                         closeSelection = { showCalendarRange = false }
                     )
                 }
-
             }
         }
     }
 }
+
+
 
 
 @Preview
