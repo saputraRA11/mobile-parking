@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Easy Park</string>
     <string-array name="roles">
-        <item>Pengendara</item>
-        <item>Tukang Parkir</item>
+        <item>Pengelola</item>
         <item>Pengguna</item>
     </string-array>
 </resources>

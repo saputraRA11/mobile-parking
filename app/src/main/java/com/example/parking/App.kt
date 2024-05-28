@@ -43,34 +43,27 @@ fun ParkingApp(
 
         composable(Screen.Register.route) {
             RegisterScreen(
-                navController
+                navController = navController
             )
         }
 
         composable(
             Screen.Validation.route,
-            arguments = listOf(navArgument("phone") {
+            arguments = listOf(navArgument("path") {
                 type = NavType.StringType
             })
         ) {
-            val phone = it.arguments?.getString("phone") ?: ""
+            val path = it.arguments?.getString("path") ?: "login"
             ValidationScreen(
                 navController,
-                phone = phone
+                path = path
             )
         }
 
         composable(
-            Screen.Home.route,
-            arguments = listOf(navArgument("phone") {
-                type = NavType.StringType
-            })
+            Screen.Home.route
         ) {
-            val phone = it.arguments?.getString("phone") ?: ""
-            HomeScreen(
-                navController,
-                phone = phone
-            )
+            HomeScreen(navController)
         }
 
         composable(

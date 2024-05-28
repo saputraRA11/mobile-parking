@@ -5,12 +5,10 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Register : Screen("register")
 
-    object Validation : Screen("validation/{phone}") {
-        fun createRoute(phone: String) = "validation/$phone"
+    object Validation : Screen("validation/{path}"){
+        fun createRoute(path:String) = "validation/{path}"
     }
-    object Home : Screen("home/{phone}") {
-        fun createRoute(phone: String) = "home/$phone"
-    }
+    object Home : Screen("home")
 
     object UpdateArea : Screen("updateArea/{alamat}") {
         fun createRoute(alamat: String) = "updateArea/$alamat"

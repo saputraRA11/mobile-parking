@@ -1,7 +1,5 @@
 package com.example.parking.ui.content
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -50,8 +48,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.parking.R
 import com.example.parking.ui.component.CashPayment
 import com.example.parking.ui.component.CustomIcon
-import com.example.parking.ui.component.DatePicker
-import com.example.parking.ui.component.DatePickerRange
 import com.example.parking.ui.component.FabMenu
 import com.example.parking.ui.component.GuardList
 import com.example.parking.ui.component.HeadLineManagement
@@ -62,7 +58,6 @@ import com.example.parking.ui.component.WeeklyStatistics
 import com.example.parking.ui.navigation.Screen
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.GreyShadow
-import java.time.LocalDate
 
 @Composable
 fun Management(
@@ -525,7 +520,6 @@ fun ManagementGuard(
         }
     }
 }
-
 @Composable
 fun WeeklyManagementPlaceStatistics(
     modifier: Modifier = Modifier,
@@ -603,17 +597,13 @@ fun WeeklyManagementPlaceStatistics(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TimeSpanStatistics(
     modifier: Modifier = Modifier,
 ) {
     val options = listOf("7 Hari Terakhir", "Pilih Bulan", "Pilih Tanggal")
     var selectedOption by remember { mutableStateOf(options[0]) }
-    var showCalendar by remember { mutableStateOf(false) }
-    var showCalendarRange by remember { mutableStateOf(false) }
-    val selectedDatesRange = remember { mutableStateOf<List<LocalDate>>(listOf()) }
-    val selectedDate = remember { mutableStateOf<LocalDate?>(null) }
+
     Scaffold(
         topBar = {
             Column(
@@ -664,11 +654,7 @@ fun TimeSpanStatistics(
                             .padding(vertical = 8.dp)
                             .selectable(
                                 selected = (text == selectedOption),
-                                onClick = {
-                                    selectedOption = text
-                                    showCalendar = text == "Pilih Bulan"
-                                    showCalendarRange = text == "Pilih Tanggal"
-                                }
+                                onClick = { selectedOption = text }
                             ),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -679,35 +665,15 @@ fun TimeSpanStatistics(
                         )
                         RadioButton(
                             selected = (text == selectedOption),
-                            onClick = {
-                                selectedOption = text
-                                showCalendar = text == "Pilih Bulan"
-                                showCalendarRange = text == "Pilih Tanggal"
-                            }
+                            onClick = { selectedOption = text }
                         )
                     }
                     Divider()
                 }
-                if (showCalendar) {
-                    DatePicker(
-                        selectedDate = selectedDate,
-                        showDialog = showCalendar,
-                        closeSelection = {showCalendar = false}
-                    )
-                }
-                if (showCalendarRange) {
-                    DatePickerRange(
-                        showDialog = showCalendarRange,
-                        selectedDates = selectedDatesRange,
-                        closeSelection = { showCalendarRange = false }
-                    )
-                }
-
             }
         }
     }
 }
-
 
 @Preview
 @Composable
@@ -739,7 +705,6 @@ private fun WeeklyManagementPlaceStatisticsPreview() {
     WeeklyManagementPlaceStatistics()
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 private fun TimeSpanStatisticsPreview() {

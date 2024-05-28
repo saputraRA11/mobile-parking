@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -25,19 +24,17 @@ fun AddGuardFormScreen(
     navController: NavHostController = rememberNavController(),
     phone: String = ""
 ) {
-    val guardPhone = remember { mutableStateOf(TextFieldValue()) }
-    val guardName = remember { mutableStateOf(TextFieldValue()) }
-    val nik = remember { mutableStateOf(TextFieldValue()) }
-    val expanded = remember { mutableStateOf(false) }
-    val selectedArea = remember { mutableStateOf("") }
+   val addGuardForm = remember {
+       mutableStateOf(AddGuardForm())
+   }
     val areaList = listOf("Area 1", "Area 2", "Area 3")
-
+    val expanded = remember { mutableStateOf(false) }
     val isFormFilled by remember {
         derivedStateOf {
-            guardPhone.value.text.isNotEmpty() &&
-                    guardName.value.text.isNotEmpty() &&
-                    nik.value.text.isNotEmpty() &&
-                    selectedArea.value.isNotEmpty()
+            addGuardForm.value.guardPhone.value.text.isNotEmpty() &&
+            addGuardForm.value.guardName.value.text.isNotEmpty() &&
+            addGuardForm.value.nik.value.text.isNotEmpty() &&
+            addGuardForm.value.selectedArea.value.isNotEmpty()
         }
     }
 
@@ -79,8 +76,8 @@ fun AddGuardFormScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
-                    value = guardPhone.value,
-                    onValueChange = { guardPhone.value = it },
+                    value = addGuardForm.value.guardPhone.value,
+                    onValueChange = { addGuardForm.value.guardPhone.value = it },
                     placeholder = { Text(text = "Masukkan nomor penjaga", color = Color.White) },
                     modifier = Modifier.weight(1f),
                     colors = TextFieldDefaults.colors(
@@ -103,8 +100,8 @@ fun AddGuardFormScreen(
                 .padding(16.dp)
         ) {
             TextField(
-                value = guardName.value,
-                onValueChange = { guardName.value = it },
+                value = addGuardForm.value.guardName.value,
+                onValueChange = { addGuardForm.value.guardName.value = it },
                 placeholder = { Text(text = "Nama Penjaga") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -119,8 +116,8 @@ fun AddGuardFormScreen(
             )
 
             TextField(
-                value = nik.value,
-                onValueChange = { nik.value = it },
+                value = addGuardForm.value.nik.value,
+                onValueChange = { addGuardForm.value.nik.value = it },
                 placeholder = { Text(text = "NIK") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -140,8 +137,8 @@ fun AddGuardFormScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
-                    value = selectedArea.value,
-                    onValueChange = { selectedArea.value = it },
+                    value = addGuardForm.value.selectedArea.value,
+                    onValueChange = { addGuardForm.value.selectedArea.value = it },
                     readOnly = true,
                     placeholder = { Text(text = "Pilih Area") },
                     trailingIcon = {
@@ -165,7 +162,7 @@ fun AddGuardFormScreen(
                         DropdownMenuItem(
                             text = { Text(text = area) },
                             onClick = {
-                                selectedArea.value = area
+                                addGuardForm.value.selectedArea.value = area
                                 expanded.value = false
                             }
                         )

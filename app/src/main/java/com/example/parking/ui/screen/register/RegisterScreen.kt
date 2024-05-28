@@ -1,365 +1,178 @@
 package com.example.parking.ui.screen.register
 
-import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.SpringSpec
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.requiredSizeIn
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.MenuDefaults
-import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.minimumInteractiveComponentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MenuItemColors
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
+import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.parking.R
+import com.example.parking.di.Injection
+import com.example.parking.ui.common.UiState
+import com.example.parking.ui.component.AlertDialogExample
 import com.example.parking.ui.component.ButtonCircle
-import com.example.parking.ui.component.CustomIcon
-import com.example.parking.ui.component.CustomInput
-import com.example.parking.ui.component.Greeting
+import com.example.parking.ui.content.RegisterContent
 import com.example.parking.ui.navigation.Screen
+import com.example.parking.ui.screen.validation.OtpData
 import com.example.parking.ui.theme.BluePark
+import com.example.parking.ui.utils.ViewModelFactory
+import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Composable
 fun RegisterScreen(
     navController: NavHostController = rememberNavController(),
-    modifier: Modifier = Modifier
+    viewModel: RegisterViewModel = viewModel(
+        factory = ViewModelFactory(Injection, LocalContext.current)
+    ),
 ) {
+    val formUserUi = remember {
+        mutableStateOf(FormRegister())
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+    val alertRegister = remember { mutableStateOf(false) }
+    val alertOtp = remember { mutableStateOf(false) }
+    val customError = remember {
+        mutableStateOf("")
+    }
     val phoneNumber = remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf("")
     }
 
-    val name = remember {
-        mutableStateOf(TextFieldValue(""))
-    }
+    val dataOtpLocal = OtpData(
+        phone = phoneNumber.value,
+        path = "register"
+    )
 
-    val nik = remember {
-        mutableStateOf(TextFieldValue(""))
-    }
+    // for register
+    viewModel.uiStateRegister.collectAsState(initial = UiState.Loading).value.let {
+        uiState ->
+        when (uiState) {
+            is UiState.Success -> {
+                phoneNumber.value = uiState.data?.data?.phoneNumber.toString()
+                viewModel.resetUiStateRegister()
+                viewModel.sendOtp(phone = phoneNumber.value)
+            }
 
-    var expanded by remember { mutableStateOf(false) }
-    val roles = LocalContext.current.resources.getStringArray(R.array.roles).toList()
-    var selectedText = remember { mutableStateOf(TextFieldValue("")) }
-    val icon = if(expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
-    val scrollState = rememberScrollState()
-
-    LaunchedEffect(key1 = expanded) {
-        if(expanded) {
-            scrollState.animateScrollTo(scrollState.maxValue, SpringSpec(0.5f,Spring.StiffnessLow))
-        } else {
-            scrollState.animateScrollTo(0, SpringSpec(0.5f,Spring.StiffnessLow))
+            is UiState.Error -> {
+                alertRegister.value = true
+                customError.value = uiState.errorMessage
+            }
+            else ->{}
         }
     }
 
-    SideEffect {
-
-    }
-
-    Scaffold (
-        topBar = {
-                 Row (
-                     modifier = Modifier
-                         .padding(horizontal = 5.dp, vertical = 10.dp)
-                         .fillMaxWidth(),
-                     horizontalArrangement = Arrangement.SpaceBetween
-                 ){
-                     CustomIcon(
-                        color = Color.Black,
-                        IconVector = Icons.Default.KeyboardArrowLeft,
-                        isOutlined = false,
-                        modifier = Modifier.size(50.dp),
-                         effect = {
-                            navController.navigateUp()
-                         }
-                    )
-
-                     CustomIcon(
-                        color = Color.Black,
-                        IconVector = ImageVector.vectorResource(id = R.drawable.help_support_foreground),
-                        isOutlined = false ,
-                        modifier = Modifier.size(50.dp)
-                     )
-                 }
-        },
-        bottomBar = {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 5.dp, vertical = 10.dp)
-                    .fillMaxWidth()
-            ) {
-                ButtonCircle(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        navController.navigate(Screen.Onboarding.route)
-                    },
-                    text = "Daftar",
-                    backgroundColor = ButtonDefaults.buttonColors(containerColor = BluePark)
-                )
-
-                ButtonCircle(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        navController.navigate(Screen.Login.route)
-                    },
-                    text = "Sudah punya akun? Masuk",
-                    backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
-                    isOutlined = true,
-                    border = BorderStroke(1.dp, BluePark)
-                )
-            }
-        },
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(scrollState)
-                .fillMaxSize(),
-        ) {
-            Greeting(
-                modifier = Modifier
-                    .padding(15.dp)
-                    .fillMaxWidth(),
-            )
-
-            Column(
-                modifier = Modifier
-                    .padding(15.dp)
-                    .fillMaxWidth(),
-            ) {
-                Text(
-                    text = "Nomor Hp",
-                    style = MaterialTheme.typography.h5,
-                    fontWeight = FontWeight.W500
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(30.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "+62",
-                        style = MaterialTheme.typography.h6,
-                        modifier = Modifier
-                            .padding(start = 40.dp)
-                    )
-                    CustomInput(
-                        trailing = {
-                            CustomIcon(
-                                color = Color.Black,
-                                IconVector = Icons.Default.Clear,
-                                isOutlined = true,
-                                modifier = Modifier
-                                    .clickable {
-                                        phoneNumber.value = TextFieldValue("")
-                                    },
-                                borderSize = 3.dp,
-                            )
-
-                        },
-                        saveState = phoneNumber,
-                        keyboardType = KeyboardType.Number,
-                        singleLine = true,
-                        isNumber = true,
-                        maxLimit = 13,
+    // for otp
+    viewModel.uiStateOtp.collectAsState(initial = UiState.Loading).value.let {
+            uiState ->
+        when (uiState) {
+            is UiState.Success -> {
+                Dialog(onDismissRequest = {}) {
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                    )
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .padding(15.dp)
-                    .fillMaxWidth(),
-            ) {
-                Text(
-                    text = "Nama Pengguna",
-                    style = MaterialTheme.typography.h5,
-                    fontWeight = FontWeight.W500
-                )
-
-                CustomInput(
-                        trailing = {
-                            CustomIcon(
-                                color = Color.Black,
-                                IconVector = Icons.Default.Clear,
-                                isOutlined = true,
+                            .height(400.dp)
+                            .padding(16.dp),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(20.dp,Alignment.CenterVertically),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(20.dp)
+                        ) {
+                            Text(
+                                text = "${uiState.data?.data?.message}" ?: "",
                                 modifier = Modifier
-                                    .clickable {
-                                        phoneNumber.value = TextFieldValue("")
-                                    },
-                                borderSize = 3.dp,
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center,
                             )
 
-                        },
-                        saveState = name,
-                        singleLine = true,
-                        maxLimit = 30,
-                        modifier = modifier
-                            .fillMaxWidth(),
-                        fontSize = 16.sp,
-                    )
-            }
-
-            Column(
-                modifier = Modifier
-                    .padding(15.dp)
-                    .fillMaxWidth(),
-            ) {
-                Text(
-                    text = "NIK",
-                    style = MaterialTheme.typography.h5,
-                    fontWeight = FontWeight.W500
-                )
-
-                CustomInput(
-                    trailing = {
-                        CustomIcon(
-                            color = Color.Black,
-                            IconVector = Icons.Default.Clear,
-                            isOutlined = true,
-                            modifier = Modifier
-                                .clickable {
-                                    phoneNumber.value = TextFieldValue("")
+                            ButtonCircle(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = {
+                                    coroutineScope.launch {
+                                        viewModel.savePhone(Json.encodeToString(dataOtpLocal))
+                                    }
+                                    viewModel.resetUiStateOtp()
+                                    navController.navigate(Screen.Validation.createRoute(dataOtpLocal.path))
                                 },
-                            borderSize = 3.dp,
-                        )
-
-                    },
-                    saveState = nik,
-                    keyboardType = KeyboardType.Number,
-                    singleLine = true,
-                    isNumber = true,
-                    maxLimit = 16,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .padding(15.dp)
-                    .padding(bottom = (if(expanded) 200 else 0).dp)
-                    .fillMaxWidth(),
-            ) {
-                Text(
-                    text = "Peran",
-                    style = MaterialTheme.typography.h5,
-                    fontWeight = FontWeight.W800
-                )
-
-                CustomInput(
-                    trailing = {
-                        CustomIcon(
-                            color = Color.Black,
-                            IconVector = icon,
-                            isOutlined = true,
-                            modifier = Modifier
-                                .clickable {
-                                    expanded = true
-                                },
-                            borderSize = 3.dp,
-                        )
-
-                    },
-                    saveState = selectedText,
-                    singleLine = true,
-                    maxLimit = 12,
-                    modifier = modifier
-                        .clickable {
-                            expanded = true
+                                text = "Confirm",
+                                backgroundColor = ButtonDefaults.buttonColors(containerColor = BluePark)
+                            )
                         }
-                        .fillMaxWidth(),
-                    fontSize = 16.sp,
-                    isNumber = true,
-                    isIconDisabled = false,
-                    enabled = true,
-                    readonly = true
-                )
-
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {expanded = !expanded},
-                    modifier = Modifier
-                        .requiredSizeIn(maxHeight = 500.dp)
-                        .fillMaxWidth(),
-                )
-                {
-                    roles.forEach { label ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = label,
-                                    fontWeight = FontWeight.W500
-                                )
-                            },
-                            onClick = {
-                                selectedText.value = TextFieldValue(label)
-                                expanded = false
-                            },
-                            modifier = Modifier,
-                            colors = androidx.compose.material3.MenuDefaults.itemColors(Color.Black)
-                        )
                     }
                 }
             }
 
+            is UiState.Error -> {
+                alertRegister.value = true
+                customError.value = uiState.errorMessage
+            }
+            else ->{}
         }
     }
+
+
+
+    if(alertRegister.value || alertOtp.value) {
+        AlertDialogExample(
+            onDismissRequest = {
+                if(alertRegister.value) {
+                    alertRegister.value = false
+                    viewModel.resetUiStateRegister()
+                } else {
+                    alertOtp.value = false
+                    viewModel.resetUiStateOtp()
+                }
+
+            },
+            onConfirmation = {
+                if(alertRegister.value) {
+                    alertRegister.value = false
+                    viewModel.resetUiStateRegister()
+                } else {
+                    alertOtp.value = false
+                    viewModel.resetUiStateOtp()
+                }
+            },
+            dialogTitle = "Alert",
+            dialogText = "Error: ${customError.value}",
+        )
+    }
+
+    RegisterContent(
+        effect = {
+            navController.navigateUp()
+        },
+        registerClick = {
+            coroutineScope.launch {
+                viewModel.registerUsers(formUserUi.value)
+            }
+        },
+        loginClick = {
+            navController.navigate(Screen.Login.route)
+        },
+        formUserUi = formUserUi
+    )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun RegisterPreview(){
-    RegisterScreen()
-}
