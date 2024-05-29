@@ -69,6 +69,8 @@ class RegisterViewModel(
         localStorage.saveSetting("otp",phone)
     }
 
+
+
     fun resetUiStateRegister() {
         _uiStateRegister.value = UiState.Loading
     }

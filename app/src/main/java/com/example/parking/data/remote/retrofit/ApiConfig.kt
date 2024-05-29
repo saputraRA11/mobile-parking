@@ -18,7 +18,6 @@ object ApiConfig {
             val requestHeaders = req.newBuilder()
                 .build()
             chain.proceed(requestHeaders)
-
         }
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)

@@ -18,7 +18,7 @@ class SettingLocalStorage private constructor(private val dataStore: DataStore<P
         }
     }
 
-    suspend fun saveSetting(key: String,value:String) {
+    suspend fun saveSetting(key: String, value:String) {
         val keyStore = stringPreferencesKey(key)
         dataStore.edit { preferences ->
             preferences[keyStore] = value
@@ -31,6 +31,12 @@ class SettingLocalStorage private constructor(private val dataStore: DataStore<P
             if(it.contains(keyStore)){
                 it.remove(keyStore)
             }
+        }
+    }
+
+    suspend fun clearSettings() {
+        dataStore.edit {
+           it.clear()
         }
     }
 

@@ -84,6 +84,10 @@ class ValidationViewModel(
     suspend fun saveLocal(data: String){
         localStorage.saveSetting("user",data)
     }
+
+    suspend fun clearLocal(){
+        localStorage.clearSettings()
+    }
     fun resetUiStateValidation() {
         _uiStateValidation.value = UiState.Loading
     }

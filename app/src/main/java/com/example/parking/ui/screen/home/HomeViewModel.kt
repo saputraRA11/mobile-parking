@@ -18,6 +18,9 @@ class HomeViewModel(
     val uiStateUser: StateFlow<UiState<String>>
         get() = _uiStateUser
 
+    init {
+//        getUser()
+    }
     fun getUser() {
         viewModelScope.launch {
             try {

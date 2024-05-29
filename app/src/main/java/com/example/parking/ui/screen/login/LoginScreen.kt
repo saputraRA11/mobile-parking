@@ -35,6 +35,7 @@ import com.example.parking.ui.navigation.Screen
 import com.example.parking.ui.screen.validation.OtpData
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.utils.ViewModelFactory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -98,6 +99,7 @@ fun LoginScreen(
                                     }
                                     viewModel.resetUiStateOtp()
                                     navController.navigate(Screen.Validation.createRoute(dataOtpLocal.path))
+                                    navController.navigate(Screen.Validation.createRoute("login"))
                                 },
                                 text = "Confirm",
                                 backgroundColor = ButtonDefaults.buttonColors(containerColor = BluePark)
@@ -120,7 +122,7 @@ fun LoginScreen(
             navController.navigateUp()
         },
         loginClick = {
-            coroutineScope.launch {
+            coroutineScope.launch{
                 viewModel.sendOtp(phoneNumber.value.text)
             }
         },

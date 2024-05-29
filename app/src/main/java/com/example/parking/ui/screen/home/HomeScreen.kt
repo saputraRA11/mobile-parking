@@ -1,5 +1,6 @@
 package com.example.parking.ui.screen.home
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,62 +23,67 @@ import kotlinx.serialization.json.Json
 @Composable
 fun HomeScreen(
     navController: NavHostController = rememberNavController(),
-    viewModel: HomeViewModel = viewModel(
-        factory = ViewModelFactory(Injection, LocalContext.current)
-    ),
+//    viewModel: HomeViewModel = viewModel(
+//        factory = ViewModelFactory(Injection, LocalContext.current)
+//    ),
 ){
-    LaunchedEffect(key1 = true) {
-        viewModel.getUser()
-    }
+//    val checkUpdate = remember { mutableStateOf(false) }
 
-    val dataUserLocal = remember {
-        mutableStateOf(DataValidation())
-    }
-    val alertUser = remember { mutableStateOf(false) }
-    val customError = remember {
-        mutableStateOf("")
-    }
+//    LaunchedEffect(Unit) {
+//        if(!checkUpdate.value){
+//            viewModel.getUser()
+//            checkUpdate.value = true
+//        }
+//    }
 
-    viewModel.uiStateUser.collectAsState(initial = UiState.Loading).value.let {
-        uiState ->
-        when (uiState) {
-            is UiState.Error -> {
-                alertUser.value = true
-                customError.value = uiState.errorMessage
-            }
-            is UiState.Success -> {
-                dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
-                when(dataUserLocal.value.user?.role){
-                    "Easypark" -> {
-                        HomeScreenContent()
-                    }
-                    "ParkKeeper" -> {
-                        GuidanceScreenContent()
-                    }
-                    "ParkOwner" -> {
-                        Management(navController = navController)
-                    }
-                }
-            }
+//    val dataUserLocal = remember {
+//        mutableStateOf(DataValidation())
+//    }
+//    val alertUser = remember { mutableStateOf(false) }
+//    val customError = remember {
+//        mutableStateOf("")
+//    }
 
-            else ->{}
-        }
-    }
+//    viewModel.uiStateUser.collectAsState(initial = UiState.Loading).value.let {
+//        uiState ->
+//        when (uiState) {
+//            is UiState.Error -> {
+//                alertUser.value = true
+//                customError.value = uiState.errorMessage
+//            }
+//            is UiState.Success -> {
+//                dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
+////                when(dataUserLocal.value.user?.role){
+////                    "Easypark" -> {
+////                        HomeScreenContent()
+////                    }
+////                    "ParkKeeper" -> {
+//                        GuidanceScreenContent()
+////                    }
+////                    "ParkOwner" -> {
+////                        Management(navController = navController)
+////                    }
+////                }
+//            }
+//            is UiState.Loading -> {}
+//        }
+//    }
 
-    if(alertUser.value) {
-        AlertDialogExample(
-            onDismissRequest = {
-                    alertUser.value = false
-                    viewModel.resetUiStateUser()
-                    navController.navigateUp()
-            },
-            onConfirmation = {
-                    alertUser.value = false
-                    viewModel.resetUiStateUser()
-                    navController.navigateUp()
-            },
-            dialogTitle = "Alert",
-            dialogText = "Error: ${customError.value}",
-        )
-    }
+    Management(navController=navController)
+//    if(alertUser.value) {
+//        AlertDialogExample(
+//            onDismissRequest = {
+//                    alertUser.value = false
+//                    viewModel.resetUiStateUser()
+//                    navController.navigateUp()
+//            },
+//            onConfirmation = {
+//                    alertUser.value = false
+//                    viewModel.resetUiStateUser()
+//                    navController.navigateUp()
+//            },
+//            dialogTitle = "Alert",
+//            dialogText = "Error: ${customError.value}",
+//        )
+//    }
 }

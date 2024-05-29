@@ -17,6 +17,7 @@ import com.example.parking.ui.component.AlertDialogExample
 import com.example.parking.ui.content.ValidationContent
 import com.example.parking.ui.navigation.Screen
 import com.example.parking.ui.utils.ViewModelFactory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -39,18 +40,31 @@ fun ValidationScreen(
         mutableStateOf("")
     }
     val dataOtpLocal = remember {
-        mutableStateOf(OtpData("",""))
+        mutableStateOf(OtpData("82211843505","login"))
     }
-    LaunchedEffect(key1 = true) {
+    val isSuccess = remember {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(key1 = Unit) {
         viewModel.getPhone()
+
     }
 
-    // for local strage
+    LaunchedEffect(isSuccess.value) {
+        if(isSuccess.value) {
+            navController.navigate(Screen.Home.route)
+        }
+    }
+
+
+    // for local storage
     viewModel.uiStatePhone.collectAsState(initial = UiState.Loading).value.let {
             uiState ->
         when (uiState) {
             is UiState.Success -> {
-                dataOtpLocal.value = Json.decodeFromString(uiState.data.toString())
+                coroutineScope.launch {
+                    dataOtpLocal.value = Json.decodeFromString(uiState.data.toString())
+                }
             }
 
             is UiState.Error -> {
@@ -66,11 +80,12 @@ fun ValidationScreen(
             uiState ->
         when (uiState) {
             is UiState.Success -> {
-                val dataUser = Json.encodeToString(uiState.data?.data)
                 coroutineScope.launch {
+                    val dataUser = Json.encodeToString(uiState.data?.data)
                     viewModel.saveLocal(dataUser)
+                    isSuccess.value = true
                 }
-                navController.navigate(Screen.Home.route)
+
             }
 
             is UiState.Error -> {
