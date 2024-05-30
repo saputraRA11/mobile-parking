@@ -48,9 +48,8 @@ fun HomeManagementScreen(
     val dataAreaLocal = remember {
         mutableListOf<Area>()
     }
+
     val alertArea = remember { mutableStateOf(false) }
-
-
     val alertUser = remember { mutableStateOf(false) }
     val customError = remember {
         mutableStateOf("")
@@ -64,7 +63,6 @@ fun HomeManagementScreen(
                 customError.value = uiState.errorMessage
             }
             is UiState.Success -> {
-                Log.d("check","user:${uiState.data.toString()}")
                 dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
                 coroutineScope.launch {
                     viewModel.getAreaByOwner(dataUserLocal.value.user?.id.toString())
@@ -141,7 +139,7 @@ fun HomeManagementScreen(
                 viewModel.resetUiStateAreaByOwner()
             },
             onConfirmation = {
-                alertUser.value = false
+                alertArea.value = false
                 viewModel.resetUiStateAreaByOwner()
             },
             dialogTitle = "Alert",

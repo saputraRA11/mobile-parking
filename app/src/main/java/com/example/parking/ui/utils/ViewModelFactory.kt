@@ -32,12 +32,14 @@ class ViewModelFactory(
                 injection.userRepository(apiService),
                 injection.localStorageRepository(dataStore),
                 injection.parkingRepository(apiService),
+                injection.parkingHistoryRepository(apiService)
             ) as T
         }  else if(modelClass.isAssignableFrom(FormViewModel::class.java)){
             return FormViewModel(
                 injection.parkingRepository(apiService),
-                injection.localStorageRepository(dataStore
-                )) as T
+                injection.localStorageRepository(dataStore),
+                injection.userRepository(apiService)
+            ) as T
         } else if (modelClass.isAssignableFrom(PaymentViewModel::class.java)) {
             return PaymentViewModel(
                 injection.userRepository(apiService),
