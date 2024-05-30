@@ -15,5 +15,11 @@ data class AddGuardForm(
     val guardPhone : MutableState<TextFieldValue> = mutableStateOf(TextFieldValue()),
     val guardName : MutableState<TextFieldValue> = mutableStateOf(TextFieldValue()),
     val nik : MutableState<TextFieldValue> = mutableStateOf(TextFieldValue()),
-    val selectedArea : MutableState<String> = mutableStateOf("")
+    val selectedArea : MutableState<String> = mutableStateOf(""),
+)
+
+data class Area(
+    val id: String = "",
+    val name: String = "",
+    val guardCount: Int = 0
 )

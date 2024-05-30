@@ -28,13 +28,15 @@ class ViewModelFactory(
             return HomeViewModel(
                 injection.userRepository(apiService),
                 injection.localStorageRepository(dataStore),
-                injection.parkingRepository(apiService)
+                injection.parkingRepository(apiService),
+                injection.parkingHistoryRepository(apiService)
             ) as T
         }  else if(modelClass.isAssignableFrom(FormViewModel::class.java)){
             return FormViewModel(
                 injection.parkingRepository(apiService),
-                injection.localStorageRepository(dataStore
-                )) as T
+                injection.localStorageRepository(dataStore),
+                injection.userRepository(apiService),
+                ) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

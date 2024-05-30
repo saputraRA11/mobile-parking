@@ -1,8 +1,8 @@
 package com.example.parking.ui.component
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.os.Debug
 import android.util.Log
 import android.util.Size
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -52,25 +52,40 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.camera.core.Preview
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import com.example.parking.R
+import com.example.parking.ui.screen.home.CreateParkingHistoryDto
+import com.example.parking.ui.screen.home.Area
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.DarkBlue
 import com.example.parking.ui.utils.QrCodeAnalyzer
+import java.text.SimpleDateFormat
+import java.util.Date
 
+@SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CardCamera(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    areaParking: MutableState<Area> = mutableStateOf(Area()),
+    formCreate:MutableState<CreateParkingHistoryDto> = mutableStateOf(CreateParkingHistoryDto()),
+    onConfirm: () -> Unit = {}
 ){
     var expanded by remember { mutableStateOf(false) }
     val icon = if(expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
-
+    val isMotor = remember {
+        mutableStateOf(false)
+    }
     // camera
 
     val code = remember {
         mutableStateOf("")
+    }
+
+    LaunchedEffect(isMotor.value) {
+        formCreate.value = formCreate.value.copy(vehicleType = if (isMotor.value) "Motor" else "Car")
     }
 
     val context = LocalContext.current
@@ -80,6 +95,10 @@ fun CardCamera(
     }
 
     val isScan = remember {
+        mutableStateOf(false)
+    }
+
+    val isSuccessScan = remember {
         mutableStateOf(false)
     }
 
@@ -109,7 +128,6 @@ fun CardCamera(
             cameraProviderFuture.get().unbindAll()
             code.value = ""
         }
-        
     }
 
     Column (
@@ -167,6 +185,7 @@ fun CardCamera(
                             ContextCompat.getMainExecutor(context),
                             QrCodeAnalyzer { result ->
                                 code.value = result
+                                isSuccessScan.value = true
                             }
                         )
 
@@ -175,6 +194,7 @@ fun CardCamera(
                                 it ->
                                 // clear cache
                                 code.value = ""
+                                isSuccessScan.value = false
                                 it.get().unbindAll()
 
                                 it.get().bindToLifecycle(
@@ -196,6 +216,7 @@ fun CardCamera(
                         .padding(30.dp)
                     ,
                 )
+
             } else {
                 CustomImage(
                     id = R.drawable.camera,
@@ -269,7 +290,7 @@ fun CardCamera(
                         fontWeight = FontWeight.W600
                     )
                     Text(
-                        text = "12.00" ,
+                        text = SimpleDateFormat("HH:mm").format(Date()).toString(),
                         color = Color.White,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.W300
@@ -282,32 +303,15 @@ fun CardCamera(
                 ) {
                     Text(
                         text = "Pembayaran",
-                        fontSize = 22.sp,
                         color = Color.White,
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.W600
                     )
-                    ButtonCircle(
-                        onClick = {},
-                        text = "Tunai",
-                        textAlign = Arrangement.SpaceBetween,
-                        backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = DarkBlue),
-                        isOutlined = false,
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        trailingIcon = {
-                            CustomIcon(
-                                color = Color.Black,
-                                IconVector = icon,
-                                isOutlined = true,
-                                modifier = Modifier
-                                    .clickable {
-                                        expanded = !expanded
-                                    },
-                                borderSize = 2.dp,
-                            )
-                        },
+                    Text(
+                        text = "Tunai" ,
+                        color = Color.White,
                         style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.W400
+                        fontWeight = FontWeight.W300
                     )
                 }
 
@@ -323,7 +327,7 @@ fun CardCamera(
                         fontWeight = FontWeight.W600
                     )
                     Text(
-                        text = "Bojongsoang" ,
+                        text = areaParking.value.name,
                         color = Color.White,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.W300
@@ -335,24 +339,72 @@ fun CardCamera(
                         .weight(1f)
                 ) {
                     Text(
-                        text = "Pemindai",
+                        text = "Kendaraan",
+                        fontSize = 22.sp,
                         color = Color.White,
-                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.W600
                     )
-                    Text(
-                        text = "Kasir Bojongsoang" ,
-                        color = Color.White,
+
+                    if(isMotor.value) {
+                        formCreate.value = formCreate.value.copy(vehicleType = "Motor")
+                    }
+                    else {
+                        formCreate.value = formCreate.value.copy(vehicleType = "Car")
+                    }
+
+                    val vehicleType = if (isMotor.value) "Motor" else "Car"
+                    formCreate.value = formCreate.value.copy(vehicleType = vehicleType)
+
+                    // ButtonCircle to toggle the vehicle type
+                    ButtonCircle(
+                        onClick = {
+                            isMotor.value = !isMotor.value
+                        },
+                        text = formCreate.value.vehicleType,
+                        textAlign = Arrangement.SpaceBetween,
+                        backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = DarkBlue),
+                        isOutlined = false,
+                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = {
+                            CustomIcon(
+                                color = Color.Black,
+                                IconVector = icon,
+                                isOutlined = true,
+                                modifier = Modifier.clickable {
+                                    expanded = !expanded
+                                    isMotor.value = !isMotor.value
+                                },
+                                borderSize = 2.dp,
+                            )
+                        },
                         style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.W300
+                        fontWeight = FontWeight.W400
                     )
+
                 }
+            }
+
+            if(isSuccessScan.value) {
+                formCreate.value = formCreate.value.copy(
+                    easypark_id = code.value
+                )
+                AlertDialogExample(
+                    onDismissRequest = {
+                        isSuccessScan.value = false
+                    },
+                    onConfirmation = {
+                        isSuccessScan.value = false
+                    },
+                    dialogTitle = "Notification",
+                    dialogText = "Success to Scan",
+                )
             }
 
             if(isScan.value) {
                 ButtonCircle(
                     onClick = {
                         isScan.value = false
+                        onConfirm()
                     },
                     text = "Konfirmasi",
                     backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),

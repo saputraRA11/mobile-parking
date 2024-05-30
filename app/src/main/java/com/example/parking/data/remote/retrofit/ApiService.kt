@@ -19,6 +19,7 @@ import com.example.parking.data.remote.response.Auth.RegisterResponse
 import com.example.parking.data.remote.response.Parking.UpdateParkingResponse
 import com.example.parking.data.remote.response.Auth.ValidationResponse
 import com.example.parking.data.remote.response.Parking.GetParkingResponse
+import com.example.parking.data.remote.response.ParkingHistory.ActiveHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.CreateHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.GetDetailHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.GetHistoryResponse
@@ -194,6 +195,17 @@ interface ApiService {
     suspend fun createHistory(
         @Body bodyHistory:BodyCreateHistory
     ):Response<CreateHistoryResponse>
+
+    @Headers(
+        value = [
+            "User-Agent: request",
+            "Content-Type: application/json"
+        ]
+    )
+    @GET("parking-history/active-ticket/{id}")
+    suspend fun detailHistoryByUser(
+        @Path("id") id:String,
+    ):Response<ActiveHistoryResponse>
 
     @Headers(
         value = [
