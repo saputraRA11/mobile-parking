@@ -32,18 +32,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.parking.R
 import com.example.parking.ui.screen.form.AddGuardForm
+import com.example.parking.ui.screen.home.Area
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddGuardContent(
     backClick: () -> Unit = {},
     submitClick: () -> Unit = {},
-    addGuardForm: MutableState<AddGuardForm> = mutableStateOf(AddGuardForm())
+    addGuardForm: MutableState<AddGuardForm> = mutableStateOf(AddGuardForm()),
+    listArea: MutableList<Area> = mutableListOf()
 ){
-    val areaList = listOf("Area 1", "Area 2", "Area 3")
     val expanded = remember { mutableStateOf(false) }
     val isFormFilled by remember {
         derivedStateOf {
@@ -174,11 +176,12 @@ fun AddGuardContent(
                     expanded = expanded.value,
                     onDismissRequest = { expanded.value = false }
                 ) {
-                    areaList.forEach { area ->
+                    listArea.map {
+                        area ->
                         DropdownMenuItem(
-                            text = { Text(text = area) },
+                            text = { Text(text = area.name) },
                             onClick = {
-                                addGuardForm.value.selectedArea.value = area
+                                addGuardForm.value.selectedArea.value = area.id
                                 expanded.value = false
                             }
                         )
@@ -187,4 +190,12 @@ fun AddGuardContent(
             }
         }
     }
+}
+
+@Preview(
+    showBackground = true
+)
+@Composable
+fun AddGuardPreview(){
+    AddGuardContent()
 }

@@ -22,6 +22,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,9 +37,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.parking.R
+import com.example.parking.data.remote.response.Auth.DataValidation
 import com.example.parking.ui.component.CardImage
 import com.example.parking.ui.component.CustomIcon
 import com.example.parking.ui.component.HeadLineUser
+import com.example.parking.ui.screen.home.UpdateParkingHistoryDto
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.GreyShadow
 
@@ -46,9 +49,11 @@ import com.example.parking.ui.theme.GreyShadow
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
-    phone: String = "kosong",
+    userDataLocal:MutableState<DataValidation> = mutableStateOf(DataValidation()),
+    dataForm:MutableState<UpdateParkingHistoryDto> = mutableStateOf(UpdateParkingHistoryDto()),
     onRefresh: () -> Unit = {},
-    paymentClick: () -> Unit = {}
+    paymentClick: () -> Unit = {} ,
+    onSubmit: () -> Unit = {}
 ) {
     val refreshing = remember {
         mutableStateOf(false)
@@ -171,8 +176,9 @@ fun HomeScreenContent(
                 ) {
                     // Display data
                     CardImage(
-                        status = status,
-                        phone = phone,
+                        userId = userDataLocal.value.user?.id.toString(),
+                        dataForm = dataForm,
+                        onSubmit = onSubmit,
                         modifier = Modifier
                             .padding(innerPadding)
                             .fillMaxSize()

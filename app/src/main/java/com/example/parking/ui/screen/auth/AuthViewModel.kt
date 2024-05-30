@@ -9,6 +9,7 @@ import com.example.parking.data.preferences.SettingLocalStorage
 import com.example.parking.data.remote.response.Auth.RegisterResponse
 import com.example.parking.data.remote.response.Auth.ValidationResponse
 import com.example.parking.data.remote.response.WA.OtpResponse
+import com.example.parking.data.repository.ParkingRepository
 import com.example.parking.data.repository.UserRepository
 import com.example.parking.ui.common.UiState
 import com.example.parking.ui.screen.auth.dto.FormRegister
@@ -20,7 +21,8 @@ import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private  val userRepository: UserRepository,
-    private val localStorage: SettingLocalStorage
+    private val localStorage: SettingLocalStorage,
+
 ): ViewModel() {
     private val _uiStateOtp: MutableStateFlow<UiState<OtpResponse>> = MutableStateFlow(
         UiState.Loading)

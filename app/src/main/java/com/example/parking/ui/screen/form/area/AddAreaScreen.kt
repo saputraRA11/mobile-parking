@@ -73,7 +73,7 @@ fun AddAreaFormScreen(
         }
     }
 
-    viewModel.uiStateParking.collectAsState(initial = UiState.Loading).value.let {
+    viewModel.uiStateAddArea.collectAsState(initial = UiState.Loading).value.let {
             uiState ->
         when (uiState) {
             is UiState.Error -> {
@@ -109,11 +109,11 @@ fun AddAreaFormScreen(
         AlertDialogExample(
             onDismissRequest = {
                 alertForm.value = false
-                viewModel.resetUiStateParking()
+                viewModel.resetUiStateAddParking()
             },
             onConfirmation = {
                 alertForm.value = false
-                viewModel.resetUiStateParking()
+                viewModel.resetUiStateAddParking()
             },
             dialogTitle = "Alert",
             dialogText = "Error: ${customError.value}",

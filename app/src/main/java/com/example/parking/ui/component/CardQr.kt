@@ -21,6 +21,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.parking.R
+import com.example.parking.ui.screen.home.UpdateParkingHistoryDto
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.DarkBlue
 import com.example.parking.ui.utils.QrCodeGenerator
@@ -46,15 +48,20 @@ import com.example.parking.ui.utils.QrCodeGenerator
 @Composable
 fun CardImage(
     modifier: Modifier = Modifier,
-    phone: String = "kosong",
-    status:MutableState<Int> = remember {
-        mutableStateOf(0)
-    }
+    userId:String = "none",
+    dataForm:MutableState<UpdateParkingHistoryDto> = mutableStateOf(UpdateParkingHistoryDto()),
+    onSubmit: () -> Unit = {}
 ){
+    val isCash = remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(isCash.value) {
+        dataForm.value = dataForm.value.copy(paymentType = if(isCash.value) "Cash" else "Qr")
+    }
     var expanded by remember { mutableStateOf(false) }
     val icon = if(expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
 
-    // 0 -> non aktif, 1 konfirmasi , 2 karcis aktif
 
     Column (
         modifier = modifier
@@ -90,7 +97,7 @@ fun CardImage(
                     .padding(vertical = 10.dp)
         ) {
             CustomImage(
-                painter = QrCodeGenerator(content = phone),
+                painter = QrCodeGenerator(content = userId),
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .fillMaxHeight(0.5f)
@@ -161,144 +168,79 @@ fun CardImage(
                         fontWeight = FontWeight.W600
                     )
                     Text(
-                        text = if(status.value == 0) "Tidak Aktif" else if(status.value == 1) "Konfirmasi" else "Aktif",
+                        text = if(!dataForm.value.isActive && !dataForm.value.isConfirm) "Tidak Aktif" else if(dataForm.value.isConfirm) "Konfirmasi" else "Aktif",
                         color = Color.White,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.W300
-                    )
-                }
-
-                if(status.value != 0) {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                    ) {
-                        Text(
-                            text = "Pembayaran",
-                            fontSize = 22.sp,
-                            color = Color.White,
-                            fontWeight = FontWeight.W600
                         )
-                        ButtonCircle(
-                            onClick = {},
-                            text = "Tunai",
-                            textAlign = Arrangement.SpaceBetween,
-                            backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = DarkBlue),
-                            isOutlined = false,
+                    }
+                    if(dataForm.value.isConfirm || dataForm.value.isActive) {
+                        Column(
                             modifier = Modifier
-                                .fillMaxWidth(),
-                            trailingIcon = {
-                                CustomIcon(
-                                    color = Color.Black,
-                                    IconVector = icon,
-                                    isOutlined = true,
-                                    modifier = Modifier
-                                        .clickable {
-                                            expanded = !expanded
-                                        },
-                                    borderSize = 2.dp,
-                                )
-                            },
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.W400
-                        )
-                    }
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Pembayaran",
+                                fontSize = 22.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.W600
+                            )
+                            ButtonCircle(
+                                onClick = { isCash.value = !isCash.value},
+                                text = dataForm.value.paymentType,
+                                textAlign = Arrangement.SpaceBetween,
+                                backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = DarkBlue),
+                                isOutlined = false,
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                trailingIcon = {
+                                    CustomIcon(
+                                        color = Color.Black,
+                                        IconVector = icon,
+                                        isOutlined = true,
+                                        modifier = Modifier
+                                            .clickable {
+                                                expanded = !expanded
+                                            },
+                                        borderSize = 2.dp,
+                                    )
+                                },
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.W400
+                            )
+                        }
 
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                        modifier = Modifier
-                            .weight(1f)
-                    ) {
-                        Text(
-                            text = "Lokasi",
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.W600
-                        )
-                        Text(
-                            text = "Bojongsoang" ,
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.W300
-                        )
-                    }
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                        modifier = Modifier
-                            .weight(1f)
-                    ) {
-                        Text(
-                            text = "Kendaraan",
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.W600
-                        )
-
-                        ButtonCircle(
-                            onClick = {},
-                            text = "Mobil",
-                            textAlign = Arrangement.SpaceBetween,
-                            backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = DarkBlue),
-                            isOutlined = false,
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
                             modifier = Modifier
-                                .fillMaxWidth(),
-                            trailingIcon = {
-                                CustomIcon(
-                                    color = Color.Black,
-                                    IconVector = icon,
-                                    isOutlined = true,
-                                    modifier = Modifier
-                                        .clickable {
-                                            expanded = !expanded
-                                        },
-                                    borderSize = 2.dp,
-                                )
-                            },
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.W400
-                        )
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Lokasi",
+                                color = Color.White,
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.W600
+                            )
+                            Text(
+                                text = dataForm.value.areaName ,
+                                color = Color.White,
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.W300
+                            )
+                        }
                     }
                 }
 
-            }
-
-            when(status.value) {
-                0 -> {
-                    ButtonCircle(
-                        onClick = {},
-                        text = "Karcis Belum Aktif",
-                        backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
-                        isOutlined = false,
-                        modifier = Modifier
-                            .padding(horizontal = 20.dp)
-                            .fillMaxWidth(),
-                        enable = false
-                    )
-                }
-                1 -> {
-                    ButtonCircle(
-                        onClick = {},
-                        text = "Konfirmasi",
-                        backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
-                        isOutlined = false,
-                        modifier = Modifier
-                            .padding(horizontal = 20.dp)
-                            .fillMaxWidth(),
-                    )
-                }
-                2 -> {
-                    ButtonCircle(
-                        onClick = {},
-                        text = "Karcis Aktif",
-                        backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
-                        isOutlined = false,
-                        modifier = Modifier
-                            .padding(horizontal = 20.dp)
-                            .fillMaxWidth(),
-                        enable = false
-                    )
-                }
-            }
+            ButtonCircle(
+                onClick = onSubmit,
+                text = if(!dataForm.value.isActive && !dataForm.value.isConfirm) "Karcis Belum Aktif" else if(dataForm.value.isConfirm) "Konfirmasi" else "Karcis Aktif",
+                backgroundColor = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = BluePark),
+                isOutlined = false,
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .fillMaxWidth(),
+                enable = dataForm.value.isConfirm
+            )
         }
     }
 }

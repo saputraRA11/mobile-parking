@@ -3,6 +3,7 @@ package com.example.parking.data.repository
 import com.example.parking.data.model.ParkingHistory.BodyCreateHistory
 import com.example.parking.data.model.ParkingHistory.BodyUpdateHistory
 import com.example.parking.data.model.ParkingHistory.QueryAggregateHistory
+import com.example.parking.data.remote.response.ParkingHistory.ActiveHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.CreateHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.GetDetailHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.GetHistoryResponse
@@ -23,7 +24,13 @@ private constructor(
             throw e
         }
     }
-
+    suspend fun detailHistoryByUser(id:String): Flow<ActiveHistoryResponse> {
+        try {
+            return flowOf(retrofitErrorHandler(apiService.detailHistoryByUser(id)))
+        } catch (e:Exception){
+            throw e
+        }
+    }
     suspend fun updateHistory(id:String,bodyUpdateHistory: BodyUpdateHistory): Flow<UpdateHistoryResponse> {
         try {
             return flowOf(retrofitErrorHandler(apiService.updateHistory(id,bodyUpdateHistory)))

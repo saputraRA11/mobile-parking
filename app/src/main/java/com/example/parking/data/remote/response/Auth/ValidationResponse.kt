@@ -40,6 +40,9 @@ data class User(
 	@field:SerializedName("name")
 	val name: String? = "",
 
+	@field:SerializedName("parking_lot_id")
+	val parkingId: String? = "",
+
 //	@field:SerializedName("created_at")
 //	val createdAt: String? = "",
 
@@ -47,7 +50,7 @@ data class User(
 //	val otp: Int? = 0,
 
 	@field:SerializedName("id")
-	val id: String? = "",
+	val id: String? = "none",
 
 	@field:SerializedName("status")
 	val status: String? = ""

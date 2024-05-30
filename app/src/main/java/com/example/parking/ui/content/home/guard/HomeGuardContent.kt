@@ -22,6 +22,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,6 +40,8 @@ import com.example.parking.R
 import com.example.parking.ui.component.CardCamera
 import com.example.parking.ui.component.CustomIcon
 import com.example.parking.ui.component.HeadLineGuidance
+import com.example.parking.ui.screen.home.Area
+import com.example.parking.ui.screen.home.CreateParkingHistoryDto
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.GreyShadow
 
@@ -46,27 +49,19 @@ import com.example.parking.ui.theme.GreyShadow
 @Composable
 fun HomeGuidanceContent(
     modifier: Modifier = Modifier,
-    phone: String = "kosong",
     onRefresh: () -> Unit = {},
-    paymentClick: () -> Unit = {}
+    paymentClick: () -> Unit = {},
+    onConfirm: () -> Unit = {},
+    areaParking: MutableState<Area> = mutableStateOf(Area()),
+    formCreate:MutableState<CreateParkingHistoryDto> = mutableStateOf(CreateParkingHistoryDto())
 ) {
     val refreshing = remember {
         mutableStateOf(false)
     }
 
-    val status = remember {
-        mutableStateOf(0)
-    }
-
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshing.value,
         onRefresh = {
-            if (status.value == 2) {
-                status.value = 0
-            } else {
-                status.value++
-            }
-
             onRefresh()
         }
     )
@@ -170,6 +165,9 @@ fun HomeGuidanceContent(
             ) {
                 // Display data
                 CardCamera(
+                    areaParking = areaParking,
+                    formCreate = formCreate,
+                    onConfirm = onConfirm,
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize()

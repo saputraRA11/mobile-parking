@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="Parking.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-05-29T21:58:02.763925946Z">
+        <DropdownSelection timestamp="2024-05-30T19:36:45.633048828Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=104733339G000749" />
@@ -20,6 +20,9 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="PaymentGuardContentPreview">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="CardCameraPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
