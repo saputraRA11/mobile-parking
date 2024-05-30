@@ -1,12 +1,9 @@
 package com.example.parking.ui.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,18 +15,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.parking.R
-import com.example.parking.ui.navigation.Screen
+import com.example.parking.ui.screen.home.Area
 import com.example.parking.ui.theme.BluePark
 
 @Composable
 fun ParkirArea(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    onClick:(id:String) -> Unit = {},
+    listArea: MutableList<Area> = mutableListOf()
 ) {
-    Column(modifier = modifier.padding(16.dp)) {
+    Column(modifier = modifier) {
         Text(
             text = "Area Parkir",
             style = MaterialTheme.typography.headlineSmall,
@@ -40,67 +36,12 @@ fun ParkirArea(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            item {
-                RepeatableItemsRow(namePlace = "Bojongsoang", guard = 0, effect = {
-                    navController.navigate(
-                        Screen.UpdateArea.createRoute("a")
-                    )
-                })
-            }
-            item {
-                RepeatableItemsRow(namePlace = "Citra Land", guard = 0) {
-                    navController.navigate(
-                        Screen.UpdateArea.createRoute("b")
-                    )
-                }
-            }
-            item {
-                RepeatableItemsRow(namePlace = "Jember Town Square", guard = 1) {
-                    navController.navigate(
-                        Screen.UpdateArea.createRoute("c")
-                    )
-                }
-            }
-            item {
-                RepeatableItemsRow(namePlace = "Bojongsoang", guard = 0) {
-                    navController.navigate(
-                        Screen.UpdateArea.createRoute("d")
-                    )
-                }
-            }
-            item {
-                RepeatableItemsRow(namePlace = "Citra Land", guard = 0) {
-                    navController.navigate(
-                        Screen.UpdateArea.createRoute("e")
-                    )
-                }
-            }
-            item {
-                RepeatableItemsRow(namePlace = "Jember Town Square", guard = 1) {
-                    navController.navigate(
-                        Screen.UpdateArea.createRoute("f")
-                    )
-                }
-            }
-            item {
-                RepeatableItemsRow(namePlace = "Bojongsoang", guard = 0) {
-                    navController.navigate(
-                        Screen.UpdateArea.createRoute("")
-                    )
-                }
-            }
-            item {
-                RepeatableItemsRow(namePlace = "Citra Land", guard = 0) {
-                    navController.navigate(
-                        Screen.UpdateArea.createRoute("g")
-                    )
-                }
-            }
-            item {
-                RepeatableItemsRow(namePlace = "Jember Town Square", guard = 1) {
-                    navController.navigate(
-                        Screen.UpdateArea.createRoute("h")
-                    )
+            listArea.map {
+                area ->
+                item {
+                    RepeatableItemsRow(namePlace = area.name, guard = area.guardCount, effect = {
+                        onClick(area.id)
+                    })
                 }
             }
         }

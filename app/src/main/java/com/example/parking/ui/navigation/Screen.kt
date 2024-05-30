@@ -2,29 +2,18 @@ package com.example.parking.ui.navigation
 
 sealed class Screen(val route: String) {
     object Onboarding : Screen("onboarding")
-    object Login : Screen("login")
-    object Register : Screen("register")
-
-    object Validation : Screen("validation/{phone}") {
-        fun createRoute(phone: String) = "validation/$phone"
+    object Auth : Screen("auth/{path}") {
+        fun createRoute(path:String  = "none") = "auth/${path}"
     }
-    object Home : Screen("home/{phone}") {
-        fun createRoute(phone: String) = "home/$phone"
+    object Home : Screen("home/{path}") {
+        fun createRoute(path:String = "none") = "home/${path}"
     }
 
-    object UpdateArea : Screen("updateArea/{alamat}") {
-        fun createRoute(alamat: String) = "updateArea/$alamat"
+    object Payment : Screen("payment/{path}") {
+        fun createRoute(path:String = "none") = "payment/${path}"
     }
 
-    object GuardList : Screen("guardList/{phone}") {
-        fun createRoute(phone: String) = "guardList/$phone"
-    }
-
-    object AddArea : Screen("addArea/{phone}") {
-        fun createRoute(phone: String) = "addArea/$phone"
-    }
-
-    object AddGuard : Screen("addGuard/{phone}") {
-        fun createRoute(phone: String) = "addGuard/$phone"
+    object Form : Screen("form/{path}/{action}") {
+        fun createRoute(path:String = "none",action:String = "none") = "form/${path}/${action}"
     }
 }

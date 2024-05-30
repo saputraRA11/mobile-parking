@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -20,6 +21,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "BASE_URL", "\"http://18.141.144.140:8080/v1/api/\"")
     }
 
     buildTypes {
@@ -37,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -80,8 +84,13 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
 
     //retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+    debugImplementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+
+
+
 
     //coroutine support
     implementation(libs.lifecycle.viewmodel.ktx) //viewModelScope
@@ -109,4 +118,7 @@ dependencies {
 
     // CALENDAR
     implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:1.3.0")
+
+    // Encode data to local storage
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 }
