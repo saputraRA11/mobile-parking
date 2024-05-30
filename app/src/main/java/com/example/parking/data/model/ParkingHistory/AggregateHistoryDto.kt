@@ -1,6 +1,7 @@
 package com.example.parking.data.model.ParkingHistory
 
 import retrofit2.http.Query
+
 data class QueryAggregateHistory(
     @Query("take")
     val take:String?= "20",

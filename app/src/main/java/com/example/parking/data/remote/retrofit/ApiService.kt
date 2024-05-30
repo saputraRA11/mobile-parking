@@ -171,7 +171,15 @@ interface ApiService {
     )
     @GET("parking-history/aggregate")
     suspend fun aggregateHistory(
-        queryAggregateHistory: QueryAggregateHistory
+        @Query("take") take:String?= "20",
+        @Query("skip") skip:String? = "0",
+        @Query("created_at_start_filter") created_at_start_filter:String? = null,
+        @Query("created_at_end_filter") created_at_end_filter:String? = null,
+        @Query("easypark_id") easypark_id:String? = null,
+        @Query("owner_id") owner_id:String? = null,
+        @Query("keeper_id") keeper_id:String? = null,
+        @Query("ticket_status") ticket_status:String? = null,
+        @Query("payment_type") payment_type:String? = null
     ):Response<GetHistoryResponse>
 
     @Headers(

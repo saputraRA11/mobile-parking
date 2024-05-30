@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class ActiveHistoryResponse(
 
 	@field:SerializedName("data")
-	val data: Data? = null,
+	val data: DataResponse? = null,
 
 	@field:SerializedName("success")
 	val success: Boolean? = null
@@ -23,7 +23,7 @@ data class ParkingLotActiveHistory(
 	val imageUrl: String? = null
 )
 
-data class Data(
+data class DataResponse(
 
 	@field:SerializedName("ticket_status")
 	val ticketStatus: String? = null,
