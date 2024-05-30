@@ -42,7 +42,27 @@ private constructor(
 
     suspend fun aggregateHistory(queryAggregateHistory: QueryAggregateHistory): Flow<GetHistoryResponse> {
         try {
-            return flowOf(retrofitErrorHandler(apiService.aggregateHistory(queryAggregateHistory)))
+            val skip = queryAggregateHistory.skip;
+            val take = queryAggregateHistory.take;
+            val created_at_start_filter = queryAggregateHistory.created_at_start_filter;
+            val created_at_end_filter = queryAggregateHistory.created_at_end_filter;
+            val easypark_id = queryAggregateHistory.easypark_id;
+            val owner_id = queryAggregateHistory.owner_id;
+            val keeper_id = queryAggregateHistory.keeper_id;
+            val ticket_status = queryAggregateHistory.ticket_status;
+            val payment_type = queryAggregateHistory.payment_type;
+
+            return flowOf(retrofitErrorHandler(apiService.aggregateHistory(
+                take,
+                skip,
+                created_at_start_filter,
+                created_at_end_filter,
+                easypark_id,
+                owner_id,
+                keeper_id,
+                ticket_status,
+                payment_type
+            )))
         } catch (e:Exception){
             throw e
         }

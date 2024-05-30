@@ -1,5 +1,6 @@
 package com.example.parking.ui.component
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -30,12 +31,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.parking.R
+import com.example.parking.data.remote.response.ParkingHistory.Easypark
+import com.example.parking.ui.screen.payment.EasyparkHistory
+import com.example.parking.ui.screen.payment.KeeperOngoingTransaction
 import com.example.parking.ui.theme.BluePark
 
 @Composable
 fun VisitorsList(
     modifier: Modifier = Modifier,
-    isMonthly: Boolean = false
+    isMonthly: Boolean = false,
+    listHistory: MutableList<EasyparkHistory> = mutableListOf()
 ) {
     Column(modifier = modifier) {
         if(isMonthly) {
@@ -45,68 +50,19 @@ fun VisitorsList(
             )
         }
         LazyColumn {
-            item {
-                RepeatableItemRoww(
-                    visitor = "Kang Seulgi",
-                    date = "14 Mei 2024",
-                    time = "20:00 - 21:00",
-                    type = "TUNAI",
-                    price = "5000"
-                )
-            }
-            item {
-                RepeatableItemRoww(
-                    visitor = "Bojongsoang",
-                    date = "14 Mei 2024",
-                    time = "20:00 - 21:00",
-                    type = "TUNAI",
-                    price = "5000"
-                )
-            }
-            item {
-                RepeatableItemRoww(
-                    visitor = "Bojongsoang",
-                    date = "14 Mei 2024",
-                    time = "20:00 - 21:00",
-                    type = "TUNAI",
-                    price = "5000"
-                )
-            }
-            item {
-                RepeatableItemRoww(
-                    visitor = "Bojongsoang",
-                    date = "14 Mei 2024",
-                    time = "20:00 - 21:00",
-                    type = "TUNAI",
-                    price = "5000"
-                )
-            }
-            item {
-                RepeatableItemRoww(
-                    visitor = "Bojongsoang",
-                    date = "14 Mei 2024",
-                    time = "20:00 - 21:00",
-                    type = "TUNAI",
-                    price = "5000"
-                )
-            }
-            item {
-                RepeatableItemRoww(
-                    visitor = "Bojongsoang",
-                    date = "14 Mei 2024",
-                    time = "20:00 - 21:00",
-                    type = "TUNAI",
-                    price = "5000"
-                )
-            }
-            item {
-                RepeatableItemRoww(
-                    visitor = "Bojongsoang",
-                    date = "14 Mei 2024",
-                    time = "20:00 - 21:00",
-                    type = "TUNAI",
-                    price = "5000"
-                )
+            listHistory.map {
+                history ->
+                    Log.d("VisitorsList", history.toString())
+                    item {
+                        RepeatableItemRoww(
+                            visitor = history.areaName,
+                            date = history.checkIn,
+                            time = history.checkOut,
+                            type = history.payment,
+                            price = history.amount
+                        )
+                    }
+
             }
         }
     }
@@ -175,30 +131,21 @@ fun RepeatableItemRoww(
 @Composable
 fun UserPayment(
     modifier: Modifier = Modifier,
-    detailPayment: (id:String,type:String) -> Unit = { id: String, type: String -> }
+    detailPayment: (id:String,type:String) -> Unit = { id: String, type: String -> },
+    listKeeperOngoingTransactionLocal: MutableList<KeeperOngoingTransaction> = mutableListOf()
 ) {
     Column(modifier = modifier) {
         LazyColumn {
-            repeat(5){
-                item {
-                    UserPaymentRepeatableItemRow(
-                        type = "qr",
-                        date = "14/05/24",
-                        visitor = "Kang Seulgi",
-                        detailPayment
-                    )
-                }
-            }
-
-            repeat(5){
-                item {
-                    UserPaymentRepeatableItemRow(
-                        type = "cash",
-                        date = "14/05/24",
-                        visitor = "Kang Seulgi",
-                        detailPayment
-                    )
-                }
+            listKeeperOngoingTransactionLocal.map {
+                ongoingTransaction ->
+                    item {
+                        UserPaymentRepeatableItemRow(
+                            type = ongoingTransaction.payment,
+                            date = ongoingTransaction.checkIn,
+                            visitor = ongoingTransaction.name,
+                            detailPayment
+                        )
+                    }
             }
         }
     }

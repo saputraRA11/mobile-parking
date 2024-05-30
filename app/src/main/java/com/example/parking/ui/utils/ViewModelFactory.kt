@@ -7,10 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.parking.data.preferences.dataStore
 import com.example.parking.data.remote.retrofit.ApiConfig
+import com.example.parking.data.repository.ParkingHistoryRepository
 import com.example.parking.di.Injection
 import com.example.parking.ui.screen.auth.AuthViewModel
 import com.example.parking.ui.screen.form.FormViewModel
 import com.example.parking.ui.screen.home.HomeViewModel
+import com.example.parking.ui.screen.payment.PaymentViewModel
+
 //import com.example.parking.ui.screen.home.HomeViewModel
 
 class ViewModelFactory(
@@ -28,13 +31,20 @@ class ViewModelFactory(
             return HomeViewModel(
                 injection.userRepository(apiService),
                 injection.localStorageRepository(dataStore),
-                injection.parkingRepository(apiService)
+                injection.parkingRepository(apiService),
             ) as T
         }  else if(modelClass.isAssignableFrom(FormViewModel::class.java)){
             return FormViewModel(
                 injection.parkingRepository(apiService),
                 injection.localStorageRepository(dataStore
                 )) as T
+        } else if (modelClass.isAssignableFrom(PaymentViewModel::class.java)) {
+            return PaymentViewModel(
+                injection.userRepository(apiService),
+                injection.localStorageRepository(dataStore),
+                injection.parkingRepository(apiService),
+                injection.parkingHistoryRepository(apiService)
+                ) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
