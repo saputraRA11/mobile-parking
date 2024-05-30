@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="Parking.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-05-28T17:23:01.632187367Z">
+        <DropdownSelection timestamp="2024-05-29T21:58:02.763925946Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/home/saputra/.android/avd/Pixel_Fold_API_30.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=104733339G000749" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -17,6 +17,9 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="mobile-parking.Parking.app">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="PaymentGuardContentPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

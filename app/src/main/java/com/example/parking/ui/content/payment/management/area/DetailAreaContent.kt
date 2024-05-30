@@ -1,8 +1,7 @@
-package com.example.parking.ui.content
+package com.example.parking.ui.content.payment.management.area
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,21 +12,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,16 +31,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.parking.R
-import com.example.parking.ui.component.WeeklyStatistics
+import com.example.parking.ui.component.MonthlyStatistics
+import com.example.parking.ui.component.SliderStatistics
 
 @Composable
-fun WeeklyManagementPlaceStatistics(
+fun DetailManagementAreaContent(
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
-    val parkirArea = remember {
-        mutableStateOf(true)
-    }
-
     Scaffold(
         topBar = {
             Column(
@@ -58,9 +50,9 @@ fun WeeklyManagementPlaceStatistics(
                 Row(
                     verticalAlignment = Alignment.CenterVertically // Align children vertically
                 ) {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = onClick) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
                             tint = Color.White,
                             modifier = Modifier.size(53.dp)
@@ -109,99 +101,16 @@ fun WeeklyManagementPlaceStatistics(
                             .align(Alignment.CenterHorizontally)
                     )
                 }
-                WeeklyStatistics(income = 70000, user = 10)
+                MonthlyStatistics(income = 100000, user = 30)
+                SliderStatistics()
             }
 
         }
     }
 }
 
-@Composable
-fun TimeSpanStatistics(
-    modifier: Modifier = Modifier,
-) {
-    val options = listOf("7 Hari Terakhir", "Pilih Bulan", "Pilih Tanggal")
-    var selectedOption by remember { mutableStateOf(options[0]) }
-
-    Scaffold(
-        topBar = {
-            Column(
-                modifier = Modifier
-                    .background(Color(0xFF1565C0))
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White,
-                            modifier = Modifier.size(53.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(85.dp))
-                    Text(
-                        text = "Rentang Waktu",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
-                }
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Top
-            ) {
-                options.forEach { text ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                            .selectable(
-                                selected = (text == selectedOption),
-                                onClick = { selectedOption = text }
-                            ),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = text,
-                            style = MaterialTheme.typography.body1,
-                            modifier = Modifier.weight(1f)
-                        )
-                        RadioButton(
-                            selected = (text == selectedOption),
-                            onClick = { selectedOption = text }
-                        )
-                    }
-                    Divider()
-                }
-            }
-        }
-    }
-}
-
 @Preview
 @Composable
-private fun WeeklyManagementPlaceStatisticsPreview() {
-    WeeklyManagementPlaceStatistics()
-}
-
-@Preview
-@Composable
-private fun TimeSpanStatisticsPreview() {
-    TimeSpanStatistics()
+private fun DetailmanagementAreaPreview() {
+    DetailManagementAreaContent()
 }

@@ -1,4 +1,4 @@
-package com.example.parking.ui.screen.home
+package com.example.parking.ui.screen.payment
 
 import androidx.lifecycle.ViewModel
 import com.example.parking.data.repository.UserRepository
@@ -12,7 +12,7 @@ import com.example.parking.data.remote.response.Parking.GetParkingOwnerResponse
 import com.example.parking.data.repository.ParkingRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
+class PaymentViewModel(
     private  val userRepository: UserRepository,
     private val localStorage: SettingLocalStorage,
     private val parkingRepostiory: ParkingRepository,

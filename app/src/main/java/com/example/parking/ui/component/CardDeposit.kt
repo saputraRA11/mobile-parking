@@ -18,8 +18,7 @@ import com.example.parking.ui.theme.BluePark
 @Composable
 fun CardDeposit(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .padding(start = 16.dp, end = 16.dp),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Box(

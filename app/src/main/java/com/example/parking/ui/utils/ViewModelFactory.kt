@@ -8,12 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.parking.data.preferences.dataStore
 import com.example.parking.data.remote.retrofit.ApiConfig
 import com.example.parking.di.Injection
-import com.example.parking.ui.screen.Form.AddAreaViewModel
+import com.example.parking.ui.screen.auth.AuthViewModel
+import com.example.parking.ui.screen.form.FormViewModel
 import com.example.parking.ui.screen.home.HomeViewModel
-import com.example.parking.ui.screen.login.LoginViewModel
 //import com.example.parking.ui.screen.home.HomeViewModel
-import com.example.parking.ui.screen.register.RegisterViewModel
-import com.example.parking.ui.screen.validation.ValidationViewModel
 
 class ViewModelFactory(
     private val injection: Injection,
@@ -24,16 +22,19 @@ class ViewModelFactory(
     val apiService = ApiConfig.getApiService()
     @Suppress("UNCHECKED_CAST")
     override fun <T: ViewModel> create(modelClass: Class<T>) :T {
-        if(modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
-            return RegisterViewModel(injection.userRepository(apiService),injection.localStorageRepository(dataStore)) as T
-        } else if(modelClass.isAssignableFrom(ValidationViewModel::class.java)){
-            return ValidationViewModel(injection.userRepository(apiService),injection.localStorageRepository(dataStore)) as T
-        } else if(modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginViewModel(injection.userRepository(apiService),injection.localStorageRepository(dataStore)) as T
-        } else if(modelClass.isAssignableFrom(HomeViewModel::class.java)){
-            return HomeViewModel(injection.userRepository(apiService),injection.localStorageRepository(dataStore)) as T
-        }  else if(modelClass.isAssignableFrom(AddAreaViewModel::class.java)){
-            return AddAreaViewModel(injection.parkingRepository(apiService),injection.localStorageRepository(dataStore)) as T
+        if(modelClass.isAssignableFrom(AuthViewModel::class.java)) {
+            return AuthViewModel(injection.userRepository(apiService),injection.localStorageRepository(dataStore)) as T
+        }  else if(modelClass.isAssignableFrom(HomeViewModel::class.java)){
+            return HomeViewModel(
+                injection.userRepository(apiService),
+                injection.localStorageRepository(dataStore),
+                injection.parkingRepository(apiService)
+            ) as T
+        }  else if(modelClass.isAssignableFrom(FormViewModel::class.java)){
+            return FormViewModel(
+                injection.parkingRepository(apiService),
+                injection.localStorageRepository(dataStore
+                )) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

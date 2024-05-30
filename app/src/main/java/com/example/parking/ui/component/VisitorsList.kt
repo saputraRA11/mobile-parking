@@ -33,9 +33,17 @@ import com.example.parking.R
 import com.example.parking.ui.theme.BluePark
 
 @Composable
-fun VisitorsList(modifier: Modifier = Modifier) {
-    Column(modifier = modifier.padding(16.dp)) {
-
+fun VisitorsList(
+    modifier: Modifier = Modifier,
+    isMonthly: Boolean = false
+) {
+    Column(modifier = modifier) {
+        if(isMonthly) {
+            Text(
+                text = "Bulan ini",
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+            )
+        }
         LazyColumn {
             item {
                 RepeatableItemRoww(
@@ -165,51 +173,32 @@ fun RepeatableItemRoww(
 
 
 @Composable
-fun UserPayment(modifier: Modifier = Modifier) {
-    Column(modifier = modifier.padding(start = 16.dp, end = 16.dp)) {
+fun UserPayment(
+    modifier: Modifier = Modifier,
+    detailPayment: (id:String,type:String) -> Unit = { id: String, type: String -> }
+) {
+    Column(modifier = modifier) {
         LazyColumn {
-            item {
-                UserPaymentRepeatableItemRow(
-                    type = "NON-TUNAI",
-                    date = "14/05/24",
-                    visitor = "Kang Seulgi"
-                )
+            repeat(5){
+                item {
+                    UserPaymentRepeatableItemRow(
+                        type = "qr",
+                        date = "14/05/24",
+                        visitor = "Kang Seulgi",
+                        detailPayment
+                    )
+                }
             }
 
-            item {
-                UserPaymentRepeatableItemRow(
-                    type = "TUNAI",
-                    date = "14/05/24",
-                    visitor = "Kang Seulgi"
-                )
-            }
-            item {
-                UserPaymentRepeatableItemRow(
-                    type = "NON-TUNAI",
-                    date = "14/05/24",
-                    visitor = "Kang Seulgi"
-                )
-            }
-            item {
-                UserPaymentRepeatableItemRow(
-                    type = "NON-TUNAI",
-                    date = "14/05/24",
-                    visitor = "Kang Seulgi"
-                )
-            }
-            item {
-                UserPaymentRepeatableItemRow(
-                    type = "TUNAI",
-                    date = "14/05/24",
-                    visitor = "Kang Seulgi"
-                )
-            }
-            item {
-                UserPaymentRepeatableItemRow(
-                    type = "NON-TUNAI",
-                    date = "14/05/24",
-                    visitor = "Kang Seulgi"
-                )
+            repeat(5){
+                item {
+                    UserPaymentRepeatableItemRow(
+                        type = "cash",
+                        date = "14/05/24",
+                        visitor = "Kang Seulgi",
+                        detailPayment
+                    )
+                }
             }
         }
     }
@@ -220,14 +209,16 @@ fun UserPaymentRepeatableItemRow(
     type: String,
     date: String,
     visitor: String,
-    effect: () -> Unit = {}
+    detailPayment: (id:String,type:String) -> Unit = { id: String, type: String -> },
 ) {
     val buttonShape: Shape = RoundedCornerShape(100.dp)
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable { effect() },
+            .clickable {
+                detailPayment("id",type)
+                       },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -248,7 +239,10 @@ fun UserPaymentRepeatableItemRow(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
-                    onClick = {},
+                    onClick = {
+                        detailPayment("id",type)
+                              },
+
                     colors = ButtonDefaults.buttonColors(
                         containerColor = BluePark
                     ),
@@ -280,14 +274,16 @@ fun UserPaymentRepeatableItemRow(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun RepeatableItemRowPreview() {
-    VisitorsList()
-}
+
 
 @Preview(showBackground = true)
 @Composable
 private fun UserPaymentRepeatableItemRowPreview() {
     UserPayment()
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RepeatableItemRowPreview() {
+    VisitorsList()
 }
