@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.parking"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -109,4 +109,6 @@ dependencies {
 
     // CALENDAR
     implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:1.3.0")
+
+    implementation("co.yml:ycharts:2.1.0")
 }

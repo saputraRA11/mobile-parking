@@ -4,25 +4,14 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-05-17T09:31:40.959475Z">
+        <DropdownSelection timestamp="2024-05-28T18:45:14.713147Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/fauzanramadhana/.android/avd/Jagoan.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=5bd8a4e5" />
             </handle>
           </Target>
         </DropdownSelection>
-        <DialogSelection>
-          <targets>
-            <Target type="DEFAULT_BOOT">
-              <handle>
-                <DeviceId pluginId="PhysicalDevice" identifier="serial=5bd8a4e5" />
-              </handle>
-            </Target>
-          </targets>
-        </DialogSelection>
-      </SelectionState>
-      <SelectionState runConfigName="GuidanceContentPreview">
-        <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="TimeSpanStatisticsPreview">
         <option name="selectionMode" value="DROPDOWN" />
@@ -34,6 +23,9 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="CalendarPreview">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="PreviewMyBarChart">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
