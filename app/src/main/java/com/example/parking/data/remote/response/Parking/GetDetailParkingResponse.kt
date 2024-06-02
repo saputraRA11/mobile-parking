@@ -2,13 +2,22 @@ package com.example.parking.data.remote.response.Parking
 
 import com.google.gson.annotations.SerializedName
 
-data class GetParkingResponse(
+data class GetDetailParkingResponse(
 
-    @field:SerializedName("data")
+	@field:SerializedName("data")
 	val data: DataDetailParking? = null,
 
-    @field:SerializedName("success")
+	@field:SerializedName("success")
 	val success: Boolean? = null
+)
+
+data class KeepersItem(
+
+	@field:SerializedName("name")
+	val name: String? = null,
+
+	@field:SerializedName("id")
+	val id: String? = null
 )
 
 data class DataDetailParking(
@@ -20,7 +29,7 @@ data class DataDetailParking(
 	val address: String? = null,
 
 	@field:SerializedName("updated_at")
-	val updatedAt: String? = null,
+	val updatedAt: Any? = null,
 
 	@field:SerializedName("image_url")
 	val imageUrl: String? = null,
@@ -28,14 +37,17 @@ data class DataDetailParking(
 	@field:SerializedName("owner_id")
 	val ownerId: String? = null,
 
+	@field:SerializedName("keepers")
+	val keepers: List<KeepersItem?>? = null,
+
 	@field:SerializedName("motor_cost")
-	val motorCost: Int? = null,
+	val motorCost: Any? = null,
 
 	@field:SerializedName("created_at")
 	val createdAt: String? = null,
 
 	@field:SerializedName("car_cost")
-	val carCost: Int? = null,
+	val carCost: Any? = null,
 
 	@field:SerializedName("id")
 	val id: String? = null

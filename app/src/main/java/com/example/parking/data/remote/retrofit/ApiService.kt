@@ -18,11 +18,13 @@ import com.example.parking.data.remote.response.WA.OtpResponse
 import com.example.parking.data.remote.response.Auth.RegisterResponse
 import com.example.parking.data.remote.response.Parking.UpdateParkingResponse
 import com.example.parking.data.remote.response.Auth.ValidationResponse
-import com.example.parking.data.remote.response.Parking.GetParkingResponse
+import com.example.parking.data.remote.response.Parking.GetDetailParkingResponse
 import com.example.parking.data.remote.response.ParkingHistory.ActiveHistoryResponse
+import com.example.parking.data.remote.response.ParkingHistory.CalculationHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.CreateHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.GetDetailHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.GetHistoryResponse
+import com.example.parking.data.remote.response.ParkingHistory.MonthlyCalculationHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.UpdateHistoryResponse
 import com.example.parking.data.remote.response.User.CreateUserResponse
 import com.example.parking.data.remote.response.User.GetUserResponse
@@ -110,7 +112,7 @@ interface ApiService {
     @GET("parking-lot/{id}")
     suspend fun getParkingById(
         @Path("id") id:String,
-    ):Response<GetParkingResponse>
+    ):Response<GetDetailParkingResponse>
 
 
 
@@ -158,7 +160,11 @@ interface ApiService {
     )
     @GET("user/aggregate")
     suspend fun getUser(
-        queryGetUser: QueryGetUser
+    @Query("take") take:String?= "20",
+    @Query("skip") skip:String? = "0",
+    @Query("belong_to_parking_lot_id") belong_to_parking_lot_id:String? = null,
+    @Query("owner_id") owner_id:String? = null,
+    @Query("already_assigned") already_assigned:String? = null,
     ):Response<GetUserResponse>
 
 
@@ -226,4 +232,32 @@ interface ApiService {
         @Path("id") id:String,
         @Body bodyHistory:BodyUpdateHistory
     ):Response<UpdateHistoryResponse>
+
+    @Headers(
+        value = [
+            "User-Agent: request",
+            "Content-Type: application/json"
+        ]
+    )
+    @GET("parking-history/filtered-calc")
+    suspend fun calculationHistory(
+        @Query("owner_id") ownerId:String?= null,
+
+        @Query("keeper_id") keeperId:String?= null,
+
+        @Query("created_at_start_filter") createdAtStartFilter:String,
+
+        @Query("created_at_end_filter") createdAtEndFilter:String,
+    ):Response<CalculationHistoryResponse>
+
+    @Headers(
+        value = [
+            "User-Agent: request",
+            "Content-Type: application/json"
+        ]
+    )
+    @GET("parking-history/monthly")
+    suspend fun monthlyChartHistory(
+            @Query("owner_id") ownerId:String?= "",
+    ):Response<MonthlyCalculationHistoryResponse>
 }

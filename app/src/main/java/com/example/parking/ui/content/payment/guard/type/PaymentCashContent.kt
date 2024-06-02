@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,7 +33,9 @@ import com.example.parking.ui.theme.BluePark
 @Composable
 fun PaymentCashContent(
     modifier: Modifier = Modifier,
-    backClick: () -> Unit = {}
+    backClick: () -> Unit = {},
+    onSubmit:() -> Unit = {},
+    isEnabled: MutableState<Boolean> =  mutableStateOf(true)
 ) {
     val buttonShape: Shape = RoundedCornerShape(100.dp)
 
@@ -66,7 +70,7 @@ fun PaymentCashContent(
             CashText()
             CardDepositCash()
             Button(
-                onClick = { },
+                onClick = onSubmit,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = BluePark
                 ),
@@ -74,7 +78,8 @@ fun PaymentCashContent(
                 modifier = Modifier
                     .height(50.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp)
+                    .padding(horizontal = 32.dp),
+                enabled = isEnabled.value
             ) {
                 Text(
                     text = "Konfirmasi Pembayaran",

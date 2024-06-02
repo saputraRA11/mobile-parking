@@ -1,5 +1,7 @@
 package com.example.parking.ui.screen.home
 
+import kotlinx.serialization.Serializable
+
 data class Area(
     val id: String = "",
     val name: String = "",

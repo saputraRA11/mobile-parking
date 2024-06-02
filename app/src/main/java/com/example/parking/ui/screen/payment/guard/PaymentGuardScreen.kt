@@ -18,7 +18,6 @@ import com.example.parking.ui.common.UiState
 import com.example.parking.ui.component.AlertDialogExample
 import com.example.parking.ui.content.payment.guard.PaymentGuardContent
 import com.example.parking.ui.navigation.Screen
-import com.example.parking.ui.screen.payment.EasyparkHistory
 import com.example.parking.ui.screen.payment.KeeperOngoingTransaction
 import com.example.parking.ui.screen.payment.PaymentViewModel
 import com.example.parking.ui.utils.ViewModelFactory
@@ -52,6 +51,11 @@ fun PaymentGuardScreen(
     val customError = remember {
         mutableStateOf("")
     }
+    val priceCalculation = remember {
+        mutableStateOf("")
+    }
+
+    val alertCalculation = remember { mutableStateOf(false) }
 
     viewModel.uiStateUser.collectAsState(initial = UiState.Loading).value.let {
             uiState ->
@@ -61,10 +65,12 @@ fun PaymentGuardScreen(
                 customError.value = uiState.errorMessage
             }
             is UiState.Success -> {
-                Log.d("check","user:${uiState.data.toString()}")
                 dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
                 coroutineScope.launch {
-                    viewModel.getKeeperOngoingTransaction(dataUserLocal.value.user?.id.toString())
+                    val userId = dataUserLocal.value.user?.id.toString()
+                    Log.d("debug id user",userId)
+                    viewModel.getKeeperOngoingTransaction(userId)
+//                    viewModel.getCalculationMonthly(id = userId)
                 }
             }
             is UiState.Loading -> {}
@@ -96,22 +102,57 @@ fun PaymentGuardScreen(
         }
     }
 
+    viewModel.uiStateCalculation.collectAsState(initial = UiState.Loading).value.let {
+            uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                alertCalculation.value = true
+                customError.value = uiState.errorMessage
+            }
+            is UiState.Success -> {
+                if(uiState.data?.data?.sumAll !== null){
+                    priceCalculation.value = uiState.data.data.sumAll.toString()
+                }
+            }
+            is UiState.Loading -> {}
+        }
+    }
+
     PaymentGuardContent(
         homeClick = {
             navController.navigateUp()
         },
         detailPayment = {
             id,type ->
-            when(type) {
+            coroutineScope.launch {
+                viewModel.saveParkingHistoryId(id)
+            }
+            when(type.lowercase()) {
                 "qr" -> navController.navigate(Screen.Payment.createRoute("generate"))
                 "cash" -> navController.navigate(Screen.Payment.createRoute("cash"))
                 else  -> navController.navigate(Screen.Payment.createRoute("none"))
             }
         },
-        listKeeperOngoingTransactionLocal = dataKeeperOngoingTransactionLocal
+        listKeeperOngoingTransactionLocal = dataKeeperOngoingTransactionLocal,
+        priceMonthly = priceCalculation.value
     )
 
     if(alertKeeperOngoingTransaction.value) {
+        AlertDialogExample(
+            onDismissRequest = {
+                alertKeeperOngoingTransaction.value = false
+                viewModel.resetUiStateKeeperOngoingTransaction()
+            },
+            onConfirmation = {
+                alertKeeperOngoingTransaction.value = false
+                viewModel.resetUiStateKeeperOngoingTransaction()
+            },
+            dialogTitle = "Alert",
+            dialogText = "Error: ${customError.value}",
+        )
+    }
+
+    if(alertCalculation.value) {
         AlertDialogExample(
             onDismissRequest = {
                 alertKeeperOngoingTransaction.value = false

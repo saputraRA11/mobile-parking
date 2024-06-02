@@ -11,5 +11,8 @@ data class QueryGetUser(
     val belong_to_parking_lot_id:String? = null,
 
     @Query("owner_id")
-    val owner_id:String? = null
+    val owner_id:String? = null,
+
+    @Query("already_assigned")
+    val already_assigned:String? = null
 )

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
@@ -31,7 +33,9 @@ import com.example.parking.R
 fun CustomIcon(
     modifier: Modifier = Modifier,
     color: Color = Color.Black,
-    IconVector:ImageVector,
+    isImageVector: Boolean = true,
+    painter: Painter? = null,
+    IconVector: ImageVector? = null,
     description:String = "",
     isOutlined:Boolean = true,
     borderSize:Dp = 1.dp,
@@ -46,23 +50,52 @@ fun CustomIcon(
                 .border(borderSize, color = color, shape = RoundedCornerShape(20.dp)),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(
-                IconVector,
-                contentDescription = description,
-                tint = color,
-                modifier = modifier
-            )
+            if(isImageVector) {
+                if(IconVector != null){
+                    Icon(
+                        IconVector ,
+                        contentDescription = description,
+                        tint = color,
+                        modifier = modifier.clickable {
+                            effect()
+                        }
+                    )
+                }
+
+            } else {
+                if (painter != null) {
+                    Icon(
+                        painter,
+                        contentDescription = description,
+                        tint = color,
+                        modifier = modifier.clickable {
+                            effect()
+                        }
+                    )
+                }
+            }
         }
     } else {
-        Icon(
-            IconVector,
-            contentDescription = description,
-            tint = color,
-            modifier = modifier
-                .clickable {
-                    effect()
+        if(isImageVector) {
+                if(IconVector != null){
+                    Icon(
+                        IconVector ,
+                        contentDescription = description,
+                        tint = color,
+                        modifier = modifier
+                    )
                 }
-        )
+
+            } else {
+                if (painter != null) {
+                    Icon(
+                        painter,
+                        contentDescription = description,
+                        tint = color,
+                        modifier = modifier
+                    )
+                }
+            }
     }
 }
 
@@ -75,7 +108,7 @@ fun BackIconPreview() {
     ){
         CustomIcon(
             color = BluePark,
-            IconVector = Icons.Default.KeyboardArrowLeft,
+            IconVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             isOutlined = false,
             modifier = Modifier.size(10.dp)
         )

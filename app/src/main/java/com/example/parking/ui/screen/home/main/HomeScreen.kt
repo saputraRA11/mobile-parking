@@ -39,7 +39,6 @@ fun HomeScreen(
     val alertUser = remember { mutableStateOf(false) }
     val alertUpdate = remember { mutableStateOf(false) }
     val alertHistory = remember { mutableStateOf(false) }
-    val alertDetailArea = remember { mutableStateOf(false) }
     val customError = remember {
         mutableStateOf("")
     }

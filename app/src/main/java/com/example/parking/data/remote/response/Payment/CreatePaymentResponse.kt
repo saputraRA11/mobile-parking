@@ -62,6 +62,18 @@ data class Transaction(
 	val actions: List<ActionsItem?>? = null
 )
 
+data class ActionsItem(
+
+	@field:SerializedName("method")
+	val method: String? = null,
+
+	@field:SerializedName("name")
+	val name: String? = null,
+
+	@field:SerializedName("url")
+	val url: String? = null
+)
+
 data class ParkingHistory(
 
 	@field:SerializedName("ticket_status")
@@ -75,6 +87,9 @@ data class ParkingHistory(
 
 	@field:SerializedName("amount")
 	val amount: Any? = null,
+
+	@field:SerializedName("check_out_date")
+	val checkOutDate: String? = null,
 
 	@field:SerializedName("owner_id")
 	val ownerId: String? = null,
@@ -101,17 +116,8 @@ data class ParkingHistory(
 	val parkingLotId: String? = null,
 
 	@field:SerializedName("easypark_id")
-	val easyparkId: String? = null
-)
+	val easyparkId: String? = null,
 
-data class ActionsItem(
-
-	@field:SerializedName("method")
-	val method: String? = null,
-
-	@field:SerializedName("name")
-	val name: String? = null,
-
-	@field:SerializedName("url")
-	val url: String? = null
+	@field:SerializedName("check_in_date")
+	val checkInDate: String? = null
 )

@@ -18,6 +18,8 @@ import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,13 +31,15 @@ import androidx.compose.ui.unit.sp
 import com.example.parking.R
 import com.example.parking.ui.component.BillText
 import com.example.parking.ui.component.PaymentText
+import com.example.parking.ui.screen.payment.HistoryPaymentDto
 import com.example.parking.ui.theme.BluePark
 
 @Composable
 fun PaymentGenerateQrContent(
     modifier: Modifier = Modifier,
     backClick: () -> Unit = {},
-    generateQr: () -> Unit = {}
+    generateQr: () -> Unit = {},
+    historyPayment: MutableState<HistoryPaymentDto> = mutableStateOf(HistoryPaymentDto("","",""))
 ) {
     val buttonShape: Shape = RoundedCornerShape(100.dp)
 
@@ -73,7 +77,10 @@ fun PaymentGenerateQrContent(
                 contentDescription = "",
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            BillText(modifier = Modifier.padding(bottom = 16.dp))
+            BillText(
+                modifier = Modifier.padding(bottom = 16.dp),
+                amount = historyPayment.value.totalAmount
+            )
             Button(
                 onClick = generateQr,
                 colors = ButtonDefaults.buttonColors(

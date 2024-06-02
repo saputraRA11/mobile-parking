@@ -3,11 +3,16 @@ package com.example.parking.ui.screen.form
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.parking.data.model.Parking.BodyAddParking
+import com.example.parking.data.model.Parking.BodyUpdateParking
 import com.example.parking.data.model.User.BodyCreateUser
+import com.example.parking.data.model.User.QueryGetUser
 import com.example.parking.data.preferences.SettingLocalStorage
 import com.example.parking.data.remote.response.Parking.AddParkingResponse
+import com.example.parking.data.remote.response.Parking.GetDetailParkingResponse
 import com.example.parking.data.remote.response.Parking.GetParkingOwnerResponse
+import com.example.parking.data.remote.response.Parking.UpdateParkingResponse
 import com.example.parking.data.remote.response.User.CreateUserResponse
+import com.example.parking.data.remote.response.User.GetUserResponse
 import com.example.parking.data.repository.ParkingRepository
 import com.example.parking.data.repository.UserRepository
 import com.example.parking.ui.common.UiState
@@ -40,6 +45,27 @@ class FormViewModel(
     private val _uiStateAreaOwner: MutableStateFlow<UiState<GetParkingOwnerResponse>> = MutableStateFlow(UiState.Loading)
     val uiStateAreaOwner: StateFlow<UiState<GetParkingOwnerResponse>>
         get() = _uiStateAreaOwner
+
+    private val _uiStateDetailArea: MutableStateFlow<UiState<GetDetailParkingResponse>> = MutableStateFlow(UiState.Loading)
+    val uiStateDetailArea: StateFlow<UiState<GetDetailParkingResponse>>
+        get() = _uiStateDetailArea
+
+    private val _uiStateParkingId: MutableStateFlow<UiState<String>> = MutableStateFlow(UiState.Loading)
+    val uiStateParkingId: StateFlow<UiState<String>>
+        get() = _uiStateParkingId
+
+    private val _uiStateParkingUpdate: MutableStateFlow<UiState<String>> = MutableStateFlow(UiState.Loading)
+    val uiStateParkingUpdate: StateFlow<UiState<String>>
+        get() = _uiStateParkingUpdate
+    private val _uiStateUpdateArea: MutableStateFlow<UiState<UpdateParkingResponse>> = MutableStateFlow(
+        UiState.Loading)
+    val uiStateUpdateArea: StateFlow<UiState<UpdateParkingResponse>>
+        get() = _uiStateUpdateArea
+
+    private val _uiStateGetUser: MutableStateFlow<UiState<GetUserResponse>> = MutableStateFlow(
+        UiState.Loading)
+    val uiStateGetUser: StateFlow<UiState<GetUserResponse>>
+        get() = _uiStateGetUser
     fun authenticationUser() {
         viewModelScope.launch {
             try {
@@ -54,7 +80,35 @@ class FormViewModel(
             }
         }
     }
+    fun getParkingId() {
+        viewModelScope.launch {
+            try {
+                localStorage.getSetting("parkingId").catch {
+                    _uiStateParkingId.value = UiState.Error(it.message.toString())
+                }.collect {
+                        data ->
+                    _uiStateParkingId.value = UiState.Success(data)
+                }
+            } catch (e:Exception) {
+                _uiStateParkingId.value = UiState.Error(e.message.toString())
+            }
+        }
+    }
 
+    fun getParkingData() {
+        viewModelScope.launch {
+            try {
+                localStorage.getSetting("parkingUpdate").catch {
+                    _uiStateParkingUpdate.value = UiState.Error(it.message.toString())
+                }.collect {
+                        data ->
+                    _uiStateParkingUpdate.value = UiState.Success(data)
+                }
+            } catch (e:Exception) {
+                _uiStateParkingUpdate.value = UiState.Error(e.message.toString())
+            }
+        }
+    }
 
     fun addParking(formArea: AddAreaForm) {
         viewModelScope.launch {
@@ -74,6 +128,47 @@ class FormViewModel(
                 }
             } catch (e:Exception) {
                 _uiStateAddArea.value = UiState.Error(e.message.toString())
+            }
+        }
+    }
+
+    fun updateArea(formArea: UpdateAreaDto) {
+        viewModelScope.launch {
+            try {
+                val bodyParking: BodyUpdateParking = BodyUpdateParking(
+                    address = formArea.address,
+                    motor_cost = formArea.motorPrice.toInt(),
+                    car_cost = formArea.carPrice.toInt(),
+                    park_keeper_ids = formArea.listGuard.map { it -> it.id }.toMutableList()
+                )
+                parkingRepository.updateParking(formArea.id,bodyParking).catch {
+                    _uiStateUpdateArea.value = UiState.Error(it.message.toString())
+                }. collect{
+                        parkingResponse ->
+                    _uiStateUpdateArea.value = UiState.Success(parkingResponse)
+                }
+            } catch (e:Exception) {
+                _uiStateUpdateArea.value = UiState.Error(e.message.toString())
+            }
+        }
+    }
+
+    fun getKeeperUserByOwner(id:String) {
+        viewModelScope.launch {
+            try {
+                userRepository.getUser(
+                    QueryGetUser(
+                        already_assigned = "false",
+                        owner_id = id
+                    )
+                ).catch {
+                    _uiStateGetUser.value = UiState.Error(it.message.toString())
+                }. collect{
+                        data ->
+                    _uiStateGetUser.value = UiState.Success(data)
+                }
+            } catch (e:Exception) {
+                _uiStateGetUser.value = UiState.Error(e.message.toString())
             }
         }
     }
@@ -116,6 +211,21 @@ class FormViewModel(
         }
     }
 
+    fun getAreaById(id: String) {
+        viewModelScope.launch {
+            try {
+                parkingRepository.getDetailParking(id).catch {
+                    _uiStateDetailArea.value = UiState.Error(it.message.toString())
+                }.collect {
+                        data ->
+                    _uiStateDetailArea.value = UiState.Success(data)
+                }
+            } catch (e:Exception) {
+                _uiStateDetailArea.value = UiState.Error(e.message.toString())
+            }
+        }
+    }
+
     fun resetUiStateUser() {
         _uiStateUser.value = UiState.Loading
     }
@@ -129,5 +239,31 @@ class FormViewModel(
 
     fun resetUiStateAreaOwner() {
         _uiStateAreaOwner.value = UiState.Loading
+    }
+
+    fun resetUiStateDetailArea() {
+        _uiStateDetailArea.value = UiState.Loading
+    }
+    fun resetUiStateParkingId() {
+        _uiStateParkingId.value = UiState.Loading
+    }
+
+    fun resetUiStateUpdateArea() {
+        _uiStateUpdateArea.value = UiState.Loading
+    }
+
+    fun resetUiStateParkingUpdate() {
+        _uiStateParkingUpdate.value = UiState.Loading
+    }
+
+    fun resetUiStateGetUser() {
+        _uiStateGetUser.value = UiState.Loading
+    }
+    suspend fun saveParkingId(id:String) {
+        localStorage.saveSetting("parkingId",id)
+    }
+
+    suspend fun saveUpdateDataForm(id:String) {
+        localStorage.saveSetting("parkingUpdate",id)
     }
 }

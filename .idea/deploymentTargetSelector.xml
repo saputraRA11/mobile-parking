@@ -2,36 +2,37 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="app">
+      <SelectionState runConfigName="Parking.app">
         <option name="selectionMode" value="DROPDOWN" />
-<<<<<<< HEAD
-        <DropdownSelection timestamp="2024-05-30T14:23:51.664199600Z">
-=======
-        <DropdownSelection timestamp="2024-05-30T19:36:45.633048828Z">
->>>>>>> e9aae82272b1a422eb6250d18ad51cbc527a7b7f
+        <DropdownSelection timestamp="2024-06-01T05:37:06.187257565Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=5bd8a4e5" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/saputra/.android/avd/Pixel_Fold_API_30.avd" />
             </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-<<<<<<< HEAD
-=======
-      <SelectionState runConfigName="RegisterPreview">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="mobile-parking.Parking.app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="PaymentGuardContentPreview">
+      <SelectionState runConfigName="UpdateParkingAreaPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="CardCameraPreview">
+      <SelectionState runConfigName="PaymentManagementPreview">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2024-06-01T17:53:34.220091647Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=104733339G000749" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="AssignListGuardPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
->>>>>>> e9aae82272b1a422eb6250d18ad51cbc527a7b7f
     </selectionStates>
   </component>
 </project>

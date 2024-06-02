@@ -18,7 +18,6 @@ import com.example.parking.ui.common.UiState
 import com.example.parking.ui.component.AlertDialogExample
 import com.example.parking.ui.content.payment.main.PaymentContent
 import com.example.parking.ui.screen.payment.EasyparkHistory
-import com.example.parking.ui.screen.payment.KeeperOngoingTransaction
 import com.example.parking.ui.screen.payment.PaymentViewModel
 import com.example.parking.ui.utils.ViewModelFactory
 import kotlinx.coroutines.launch
@@ -60,7 +59,6 @@ fun PaymentScreen(
                 customError.value = uiState.errorMessage
             }
             is UiState.Success -> {
-                Log.d("check","user:${uiState.data.toString()}")
                 dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
                 coroutineScope.launch {
                     viewModel.getEasyparkHistory(dataUserLocal.value.user?.id.toString())

@@ -14,19 +14,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.parking.R
 import com.example.parking.ui.component.BillText
 import com.example.parking.ui.component.PaymentQrText
+import com.example.parking.ui.screen.payment.HistoryPaymentDto
 
 @Composable
 fun PaymentQrContent(
     modifier: Modifier = Modifier,
-    backClick:() -> Unit = {}
+    backClick:() -> Unit = {},
+    historyPayment: MutableState<HistoryPaymentDto> = mutableStateOf(HistoryPaymentDto("","",""))
 ) {
     Scaffold(
         topBar = {
@@ -57,14 +62,17 @@ fun PaymentQrContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             PaymentQrText(modifier = Modifier.padding(bottom = 16.dp))
-            Image(
-                painter = painterResource(id = R.drawable.barcodepayment),
+            AsyncImage(
+                model = historyPayment.value.historyUrl,
                 contentDescription = "",
                 modifier = Modifier
                     .padding(bottom = 16.dp)
                     .size(250.dp)
             )
-            BillText(modifier = Modifier.padding(bottom = 16.dp))
+            BillText(
+                amount = historyPayment.value.totalAmount,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
         }
     }
 }

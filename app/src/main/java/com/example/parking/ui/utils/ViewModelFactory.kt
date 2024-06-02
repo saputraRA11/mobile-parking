@@ -45,7 +45,8 @@ class ViewModelFactory(
                 injection.userRepository(apiService),
                 injection.localStorageRepository(dataStore),
                 injection.parkingRepository(apiService),
-                injection.parkingHistoryRepository(apiService)
+                injection.parkingHistoryRepository(apiService),
+                injection.paymentRepository(apiService)
                 ) as T
         }
 

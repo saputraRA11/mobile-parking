@@ -7,6 +7,7 @@ import com.example.parking.ui.screen.form.area.AddAreaFormScreen
 import com.example.parking.ui.screen.form.area.DetailAreaScreen
 import com.example.parking.ui.screen.form.area.UpdateParkingAreaScreen
 import com.example.parking.ui.screen.form.guard.AddGuardFormScreen
+import com.example.parking.ui.screen.form.guard.AssignListGuardScreen
 import com.example.parking.ui.screen.form.guard.ListGuardScreen
 
 @Composable
@@ -26,6 +27,7 @@ fun FormHostNavigation(
             when(action){
                 "add" -> AddGuardFormScreen(navController)
                 "list" -> ListGuardScreen(navController)
+                "assign" -> AssignListGuardScreen(navController)
                 else -> NotFoundPage()
             }
         }

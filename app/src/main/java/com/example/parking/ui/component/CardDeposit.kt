@@ -16,7 +16,10 @@ import androidx.compose.ui.unit.sp
 import com.example.parking.ui.theme.BluePark
 
 @Composable
-fun CardDeposit(modifier: Modifier = Modifier) {
+fun CardDeposit(
+    modifier: Modifier = Modifier,
+    priceMonthly:String = ""
+) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -39,7 +42,7 @@ fun CardDeposit(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Rp15.000",
+                    text = "Rp${priceMonthly}",
                     color = Color.White,
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
