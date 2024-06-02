@@ -53,7 +53,10 @@ fun PaymentQrText(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BillText(modifier: Modifier = Modifier) {
+fun BillText(
+    modifier: Modifier = Modifier,
+    amount:String = "5000"
+) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -64,7 +67,7 @@ fun BillText(modifier: Modifier = Modifier) {
             fontSize = 16.sp
         )
         Text(
-            text = "Rp5.000",
+            text = "Rp${amount}",
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             fontSize = 32.sp

@@ -4,7 +4,7 @@ import com.example.parking.data.model.Parking.BodyAddParking
 import com.example.parking.data.model.Parking.BodyUpdateParking
 import com.example.parking.data.remote.response.Parking.AddParkingResponse
 import com.example.parking.data.remote.response.Parking.GetParkingOwnerResponse
-import com.example.parking.data.remote.response.Parking.GetParkingResponse
+import com.example.parking.data.remote.response.Parking.GetDetailParkingResponse
 import com.example.parking.data.remote.response.Parking.UpdateParkingResponse
 import com.example.parking.data.remote.retrofit.ApiService
 import com.example.parking.data.util.retrofitErrorHandler
@@ -31,7 +31,7 @@ private constructor(
         }
     }
 
-    suspend fun getDetailParking(id: String): Flow<GetParkingResponse> {
+    suspend fun getDetailParking(id: String): Flow<GetDetailParkingResponse> {
         try {
             return flowOf(retrofitErrorHandler(apiService.getParkingById(id)))
         } catch (e:Exception){

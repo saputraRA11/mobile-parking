@@ -9,6 +9,7 @@ import com.example.parking.ui.content.payment.management.area.DetailManagementAr
 fun DetailAreaScreen(
     navController: NavHostController = rememberNavController()
 ){
+
     DetailManagementAreaContent(
         onClick = {
             navController.navigateUp()

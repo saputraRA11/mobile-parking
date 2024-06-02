@@ -57,7 +57,8 @@ fun PaymentGuardContent(
     onRefresh: () -> Unit = {},
     homeClick: () -> Unit = {},
     detailPayment:(id:String,type:String) -> Unit = { id: String, type: String -> },
-    listKeeperOngoingTransactionLocal: MutableList<KeeperOngoingTransaction> = mutableListOf()
+    listKeeperOngoingTransactionLocal: MutableList<KeeperOngoingTransaction> = mutableListOf(),
+    priceMonthly:String = ""
 ) {
     val isButton = remember { mutableStateOf(true) }
 

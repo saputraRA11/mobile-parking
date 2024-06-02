@@ -2,11 +2,16 @@ package com.example.parking.data.repository
 
 import com.example.parking.data.model.ParkingHistory.BodyCreateHistory
 import com.example.parking.data.model.ParkingHistory.BodyUpdateHistory
+import com.example.parking.data.model.ParkingHistory.CalculationHistoryDto
+import com.example.parking.data.model.ParkingHistory.MonthlyQueryHistoryDto
 import com.example.parking.data.model.ParkingHistory.QueryAggregateHistory
 import com.example.parking.data.remote.response.ParkingHistory.ActiveHistoryResponse
+import com.example.parking.data.remote.response.ParkingHistory.CalculationHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.CreateHistoryResponse
+import com.example.parking.data.remote.response.ParkingHistory.DataCalculation
 import com.example.parking.data.remote.response.ParkingHistory.GetDetailHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.GetHistoryResponse
+import com.example.parking.data.remote.response.ParkingHistory.MonthlyCalculationHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.UpdateHistoryResponse
 import com.example.parking.data.remote.retrofit.ApiService
 import com.example.parking.data.util.retrofitErrorHandler
@@ -69,6 +74,29 @@ private constructor(
                 keeper_id,
                 ticket_status,
                 payment_type
+            )))
+        } catch (e:Exception){
+            throw e
+        }
+    }
+
+    suspend fun monthlyChartHistory(queryMonthly: MonthlyQueryHistoryDto): Flow<MonthlyCalculationHistoryResponse> {
+        try {
+            return flowOf(retrofitErrorHandler(apiService.monthlyChartHistory(
+                ownerId = queryMonthly.ownerId
+            )))
+        } catch (e:Exception){
+            throw e
+        }
+    }
+
+    suspend fun calculationHistory(queryCalculation: CalculationHistoryDto): Flow<CalculationHistoryResponse> {
+        try {
+            return flowOf(retrofitErrorHandler(apiService.calculationHistory(
+                createdAtStartFilter = queryCalculation.createdAtStartFilter,
+                createdAtEndFilter = queryCalculation.createdAtEndFilter,
+                keeperId = queryCalculation.keeperId,
+                ownerId = queryCalculation.ownerId,
             )))
         } catch (e:Exception){
             throw e

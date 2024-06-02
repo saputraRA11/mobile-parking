@@ -9,12 +9,16 @@ import kotlinx.coroutines.flow.catch
 import androidx.lifecycle.viewModelScope
 import com.example.parking.data.model.ParkingHistory.BodyCreateHistory
 import com.example.parking.data.model.ParkingHistory.BodyUpdateHistory
+import com.example.parking.data.model.ParkingHistory.CalculationHistoryDto
+import com.example.parking.data.model.ParkingHistory.MonthlyQueryHistoryDto
 import com.example.parking.data.model.User.BodyCreateUser
 import com.example.parking.data.preferences.SettingLocalStorage
 import com.example.parking.data.remote.response.Parking.GetParkingOwnerResponse
-import com.example.parking.data.remote.response.Parking.GetParkingResponse
+import com.example.parking.data.remote.response.Parking.GetDetailParkingResponse
 import com.example.parking.data.remote.response.ParkingHistory.ActiveHistoryResponse
+import com.example.parking.data.remote.response.ParkingHistory.CalculationHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.CreateHistoryResponse
+import com.example.parking.data.remote.response.ParkingHistory.MonthlyCalculationHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.UpdateHistoryResponse
 import com.example.parking.data.repository.ParkingHistoryRepository
 import com.example.parking.data.repository.ParkingRepository
@@ -35,8 +39,8 @@ class HomeViewModel(
     val uiStateaAreaOwner: StateFlow<UiState<GetParkingOwnerResponse>>
         get() = _uiStateAreaOwner
 
-    private val _uiStateDetailArea: MutableStateFlow<UiState<GetParkingResponse>> = MutableStateFlow(UiState.Loading)
-    val uiStateDetailArea: StateFlow<UiState<GetParkingResponse>>
+    private val _uiStateDetailArea: MutableStateFlow<UiState<GetDetailParkingResponse>> = MutableStateFlow(UiState.Loading)
+    val uiStateDetailArea: StateFlow<UiState<GetDetailParkingResponse>>
         get() = _uiStateDetailArea
 
     private val _uiStateSaveHistory: MutableStateFlow<UiState<CreateHistoryResponse>> = MutableStateFlow(UiState.Loading)
@@ -50,6 +54,8 @@ class HomeViewModel(
     private val _uiStateUpdateHistory: MutableStateFlow<UiState<UpdateHistoryResponse>> = MutableStateFlow(UiState.Loading)
     val uiStateUpdateHistory: StateFlow<UiState<UpdateHistoryResponse>>
         get() = _uiStateUpdateHistory
+
+
     fun authenticationUser() {
         viewModelScope.launch {
             try {
@@ -151,6 +157,11 @@ class HomeViewModel(
         }
     }
 
+
+
+    suspend fun saveParkingId(id:String) {
+        localStorage.saveSetting("parkingId",id)
+    }
     fun resetUiStateUser() {
         _uiStateUser.value = UiState.Loading
     }
@@ -168,6 +179,8 @@ class HomeViewModel(
     fun resetUiStateDetailArea() {
         _uiStateDetailArea.value = UiState.Loading
     }
+
+
     fun resetUiStateActiveHistoryUser() {
         _uiStateActiveHistoryUser.value = UiState.Loading
     }

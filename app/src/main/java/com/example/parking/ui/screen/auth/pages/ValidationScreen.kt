@@ -91,7 +91,6 @@ fun ValidationScreen(
                     authorized.value = convertRoleV2(uiState.data?.data?.user?.role.toString())
                     isSuccess.value = true
                 }
-
             }
 
             is UiState.Error -> {
@@ -149,7 +148,10 @@ fun ValidationScreen(
             uiState ->
         when (uiState) {
             is UiState.Success -> {
+
+                Log.d("Debug User Id in validation","${uiState.data}")
                 if(uiState.data != "") {
+
                     dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
                     isAuth.value=true
                 }
@@ -165,11 +167,15 @@ fun ValidationScreen(
         },
         onClick = {
             coroutineScope.launch {
-                viewModel.validationOtp(
-                    BodyValidation(
-                        phoneNumber.value,
-                        otpState.value.toInt()
-                    ))
+                if(otpState.value == "") {
+                    viewModel.setErrorValidation("Tolong inputkan otp!")
+                } else {
+                    viewModel.validationOtp(
+                        BodyValidation(
+                            phoneNumber.value,
+                            otpState.value.toInt()
+                        ))
+                }
             }
         },
         sendClick = {

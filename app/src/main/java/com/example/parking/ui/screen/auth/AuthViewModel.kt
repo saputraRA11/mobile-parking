@@ -147,4 +147,8 @@ class AuthViewModel(
     fun resetUiStatePhone() {
         _uiStatePhone.value = UiState.Loading
     }
+
+    fun setErrorValidation(message:String) {
+        _uiStateValidation.value = UiState.Error(message)
+    }
 }

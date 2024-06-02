@@ -1,5 +1,6 @@
 package com.example.parking.ui.screen.home.guard
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,6 +23,7 @@ import com.example.parking.ui.screen.home.HomeViewModel
 import com.example.parking.ui.utils.ViewModelFactory
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import kotlin.math.log
 
 @Composable
 fun HomeGuardScreen(
@@ -89,6 +91,7 @@ fun HomeGuardScreen(
                 customError.value = uiState.errorMessage
             }
             is UiState.Success -> {
+                // gatau ini mau ngapain
             }
             is UiState.Loading -> {}
         }
@@ -103,6 +106,7 @@ fun HomeGuardScreen(
             }
             is UiState.Success -> {
                 dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
+                Log.d("Debug User Id","${dataUserLocal}")
                 dataCreateForm.value = dataCreateForm.value.copy(keeper_id = dataUserLocal.value.user?.id.toString())
                 isSuccessUser.value = true
             }

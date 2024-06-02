@@ -16,6 +16,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -33,14 +36,19 @@ import com.example.parking.ui.component.HeadLineManagement
 import com.example.parking.ui.component.MonthlyStatistics
 import com.example.parking.ui.component.ParkirArea
 import com.example.parking.ui.component.SliderStatistics
+import com.example.parking.ui.screen.home.Area
+import com.example.parking.ui.screen.payment.ManagamenetHistoryDto
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.GreyShadow
+import com.example.parking.ui.utils.TransformChartGraph
 
 @Composable
 fun PaymentManagementContent(
     modifier: Modifier = Modifier,
     homeClick: () -> Unit = {},
-    detailAreaClick: (id:String) -> Unit = {}
+    detailAreaClick: (id:String) -> Unit = {},
+    listArea: MutableList<Area> = mutableListOf(),
+    counting: MutableState<ManagamenetHistoryDto> = mutableStateOf(ManagamenetHistoryDto())
 ) {
     Scaffold(
         topBar = {
@@ -68,11 +76,11 @@ fun PaymentManagementContent(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier
-                        .background( Color.White )
+                        .background(Color.White)
                         .shadow(elevation = 0.6.dp)
                         .weight(1f)
                         .height(100.dp)
-                        .clickable { 
+                        .clickable {
                             homeClick()
                         }
                 ) {
@@ -93,7 +101,7 @@ fun PaymentManagementContent(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier
-                        .background( BluePark )
+                        .background(BluePark)
                         .border(
                             brush = Brush.verticalGradient(
                                 listOf(GreyShadow, Color.Transparent),
@@ -133,10 +141,14 @@ fun PaymentManagementContent(
                     .fillMaxSize()
                     .padding(bottom = 30.dp)
             ) {
-                MonthlyStatistics(income = 100000, user = 30)
-                SliderStatistics()
+                MonthlyStatistics(income = counting.value.totalIncome.value, user = counting.value.totalUser.value)
+                TransformChartGraph(
+                    column = counting.value.months,
+                    dataset = counting.value.totals
+                )
                 ParkirArea(
-                    onClick = detailAreaClick
+                    onClick = detailAreaClick,
+                    listArea = listArea
                 )
             }
         }

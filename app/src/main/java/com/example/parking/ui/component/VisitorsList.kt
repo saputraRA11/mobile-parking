@@ -143,7 +143,8 @@ fun UserPayment(
                             type = ongoingTransaction.payment,
                             date = ongoingTransaction.checkIn,
                             visitor = ongoingTransaction.name,
-                            detailPayment
+                            id = ongoingTransaction.id,
+                            detailPayment = detailPayment
                         )
                     }
             }
@@ -153,6 +154,7 @@ fun UserPayment(
 
 @Composable
 fun UserPaymentRepeatableItemRow(
+    id:String,
     type: String,
     date: String,
     visitor: String,
@@ -163,9 +165,7 @@ fun UserPaymentRepeatableItemRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable {
-                detailPayment("id",type)
-                       },
+            .clickable { detailPayment(id,type) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -186,10 +186,7 @@ fun UserPaymentRepeatableItemRow(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
-                    onClick = {
-                        detailPayment("id",type)
-                              },
-
+                    onClick = { detailPayment(id,type) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = BluePark
                     ),

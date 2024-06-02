@@ -1,5 +1,6 @@
 package com.example.parking.ui.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -33,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -117,20 +120,31 @@ fun CustomInput(
     maxLimit:Int = 100,
     textAlign:TextAlign = TextAlign.Start,
     keyboardType:KeyboardType = KeyboardType.Text,
-    saveState:  MutableState<TextFieldValue>,
+    saveState:  MutableState<TextFieldValue> = mutableStateOf(TextFieldValue("")),
     isNumber:Boolean = false,
     isIconDisabled:Boolean = true,
     readonly:Boolean = false,
     enabled:Boolean = true,
-    fontWeight: FontWeight = FontWeight.Normal
+    maxLine: Int = 10,
+    fontWeight: FontWeight = FontWeight.Normal,
+    keyboardActions: KeyboardActions = KeyboardActions {  }
     ) {
 
     TextField(
+
         value = saveState.value,
         onValueChange = {
             if(it.text.length <= maxLimit) {
-                if(isNumber && it.text.isDigitsOnly()) saveState.value = it
-                else if(!isNumber) saveState.value = it
+                if(isNumber && it.text.isDigitsOnly())
+                {
+                    saveState.value = it
+                }
+                else if(!isNumber) {
+                    val result = it.text
+                    if(result.split("\n").size <= maxLine ) {
+                        saveState.value = saveState.value.copy(result, selection = it.selection)
+                    }
+                }
             }
         },
         readOnly = readonly ,
@@ -153,12 +167,14 @@ fun CustomInput(
            }
         },
         keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType
+            keyboardType = keyboardType,
         ),
+        keyboardActions = keyboardActions,
         shape = shape,
         singleLine = singleLine,
+        maxLines = maxLine,
+        enabled = enabled,
         modifier = modifier,
-        enabled = enabled
     )
 }
 
@@ -190,6 +206,9 @@ fun CustomInputPreview(){
 
             },
             saveState = saveState,
+            isIconDisabled = false,
+            isIndicatorTransparent = true,
+            enabled = false
         )
 
         val otpState = remember {

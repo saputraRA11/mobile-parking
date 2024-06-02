@@ -60,7 +60,13 @@ private constructor(
 
     suspend fun getUser(queryGetUser: QueryGetUser):Flow<GetUserResponse>  {
         try {
-            return flowOf(retrofitErrorHandler(apiService.getUser(queryGetUser)))
+            return flowOf(retrofitErrorHandler(apiService.getUser(
+                belong_to_parking_lot_id = queryGetUser.belong_to_parking_lot_id,
+                owner_id = queryGetUser.owner_id,
+                already_assigned = queryGetUser.already_assigned,
+                skip = queryGetUser.skip,
+                take = queryGetUser.take
+            )))
         } catch (e:Exception){
             throw e
         }

@@ -30,13 +30,8 @@ fun HomeManagementScreen(
         factory = ViewModelFactory(Injection, LocalContext.current)
     ),
 ){
-    val checkUpdate = remember { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
-        if(!checkUpdate.value) {
-            viewModel.authenticationUser()
-            checkUpdate.value = true
-        }
+        viewModel.authenticationUser()
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -95,7 +90,6 @@ fun HomeManagementScreen(
         }
     }
 
-
     HomeManagementContent(
         listGuard = {
         navController.navigate(Screen.Form.createRoute("guard","list"))
@@ -111,6 +105,10 @@ fun HomeManagementScreen(
         },
         updateArea = {
             id ->
+            coroutineScope.launch {
+                viewModel.saveParkingId(id)
+            }
+
             navController.navigate(Screen.Form.createRoute("area","update"))
         },
         listArea = dataAreaLocal
