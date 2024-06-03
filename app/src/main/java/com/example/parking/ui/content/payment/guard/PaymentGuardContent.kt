@@ -44,7 +44,7 @@ import com.example.parking.ui.component.DailyPayment
 import com.example.parking.ui.component.HeadLineGuidance
 import com.example.parking.ui.component.UserPayment
 import com.example.parking.ui.component.VisitorsList
-import com.example.parking.ui.screen.payment.EasyparkHistory
+import com.example.parking.ui.screen.payment.ParkingHistory
 import com.example.parking.ui.screen.payment.KeeperOngoingTransaction
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.GreyShadow
@@ -57,7 +57,8 @@ fun PaymentGuardContent(
     onRefresh: () -> Unit = {},
     homeClick: () -> Unit = {},
     detailPayment:(id:String,type:String) -> Unit = { id: String, type: String -> },
-    listKeeperOngoingTransactionLocal: MutableList<KeeperOngoingTransaction> = mutableListOf()
+    listKeeperOngoingTransactionLocal: MutableList<KeeperOngoingTransaction> = mutableListOf(),
+    listParkingHistory: MutableList<ParkingHistory> = mutableListOf()
 ) {
     val isButton = remember { mutableStateOf(true) }
 
@@ -236,6 +237,7 @@ fun PaymentGuardContent(
                     VisitorsList(
                         modifier = Modifier.weight(1f),
                         isMonthly = true,
+                        listHistory = listParkingHistory
                     )
                 }
             }

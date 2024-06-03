@@ -46,7 +46,7 @@ import com.example.parking.ui.component.HeadLineUser
 import com.example.parking.ui.component.UserPayment
 import com.example.parking.ui.component.VisitorsList
 import com.example.parking.ui.screen.home.Area
-import com.example.parking.ui.screen.payment.EasyparkHistory
+import com.example.parking.ui.screen.payment.ParkingHistory
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.GreyShadow
 
@@ -57,7 +57,7 @@ fun PaymentContent(
     cornerRadius: Int = 16,
     onRefresh: () -> Unit = {},
     homeClick: () -> Unit = {},
-    listHistory: MutableList<EasyparkHistory> = mutableListOf()
+    listHistory: MutableList<ParkingHistory> = mutableListOf()
 ) {
     val refreshing = remember {
         mutableStateOf(false)

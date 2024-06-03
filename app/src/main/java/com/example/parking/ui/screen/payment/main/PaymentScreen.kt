@@ -17,8 +17,7 @@ import com.example.parking.di.Injection
 import com.example.parking.ui.common.UiState
 import com.example.parking.ui.component.AlertDialogExample
 import com.example.parking.ui.content.payment.main.PaymentContent
-import com.example.parking.ui.screen.payment.EasyparkHistory
-import com.example.parking.ui.screen.payment.KeeperOngoingTransaction
+import com.example.parking.ui.screen.payment.ParkingHistory
 import com.example.parking.ui.screen.payment.PaymentViewModel
 import com.example.parking.ui.utils.ViewModelFactory
 import kotlinx.coroutines.launch
@@ -43,7 +42,7 @@ fun PaymentScreen(
     }
 
     val dataEasyparkHistoryLocal = remember {
-        mutableListOf<EasyparkHistory>()
+        mutableListOf<ParkingHistory>()
     }
     val alertEasyparkHistory = remember { mutableStateOf(false) }
 
@@ -82,7 +81,7 @@ fun PaymentScreen(
                 uiState.data?.data?.parkingHistory?.map {
                         history ->
                     dataEasyparkHistoryLocal.add(
-                        EasyparkHistory(
+                        ParkingHistory(
                             areaName = history?.parkingLot?.areaName.toString(),
                             checkIn = history?.checkInDate.toString(),
                             checkOut = history?.checkOutDate.toString(),

@@ -6,7 +6,7 @@ data class Area(
     val guardCount: Int = 0
 )
 
-data class EasyparkHistory(
+data class ParkingHistory(
     val areaName: String = "",
     val checkIn: String = "",
     val checkOut: String = "",

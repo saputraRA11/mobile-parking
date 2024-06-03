@@ -18,7 +18,7 @@ import com.example.parking.ui.common.UiState
 import com.example.parking.ui.component.AlertDialogExample
 import com.example.parking.ui.content.payment.guard.PaymentGuardContent
 import com.example.parking.ui.navigation.Screen
-import com.example.parking.ui.screen.payment.EasyparkHistory
+import com.example.parking.ui.screen.payment.ParkingHistory
 import com.example.parking.ui.screen.payment.KeeperOngoingTransaction
 import com.example.parking.ui.screen.payment.PaymentViewModel
 import com.example.parking.ui.utils.ViewModelFactory
@@ -48,6 +48,12 @@ fun PaymentGuardScreen(
     }
     val alertKeeperOngoingTransaction = remember { mutableStateOf(false) }
 
+    val dataKeeperHistoryLocal = remember {
+        mutableListOf<ParkingHistory>()
+    }
+    val alertKeeperHistory = remember { mutableStateOf(false) }
+
+
     val alertUser = remember { mutableStateOf(false) }
     val customError = remember {
         mutableStateOf("")
@@ -65,6 +71,7 @@ fun PaymentGuardScreen(
                 dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
                 coroutineScope.launch {
                     viewModel.getKeeperOngoingTransaction(dataUserLocal.value.user?.id.toString())
+                    viewModel.getKeeperHistory(dataUserLocal.value.user?.id.toString())
                 }
             }
             is UiState.Loading -> {}
@@ -82,12 +89,40 @@ fun PaymentGuardScreen(
                 dataKeeperOngoingTransactionLocal.clear()
                 uiState.data?.data?.parkingHistory?.map {
                         history ->
+                    Log.d("PaymentGuardScreen.viewModel.uiStateKeeperOngoingTransaction", history.toString())
                     dataKeeperOngoingTransactionLocal.add(
                         KeeperOngoingTransaction(
                             id = history?.id.toString(),
                             name = history?.easypark?.name.toString(),
                             checkIn = history?.checkInDate.toString(),
                             payment = history?.payment.toString(),
+                        )
+                    )
+                }
+            }
+            is UiState.Loading -> {}
+        }
+    }
+
+    viewModel.uiStateKeeperHistory.collectAsState(initial = UiState.Loading).value.let {
+            uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                alertKeeperHistory.value = true
+                customError.value = uiState.errorMessage
+            }
+            is UiState.Success -> {
+                dataKeeperHistoryLocal.clear()
+                uiState.data?.data?.parkingHistory?.map {
+                        history ->
+                    Log.d("PaymentGuardScreen.viewModel.uiStateKeeperHistory", history.toString())
+                    dataKeeperHistoryLocal.add(
+                        ParkingHistory(
+                            areaName = history?.parkingLot?.areaName.toString(),
+                            checkIn = history?.checkInDate.toString(),
+                            checkOut = history?.checkOutDate.toString(),
+                            payment = history?.payment.toString(),
+                            amount = history?.totalAmount.toString()
                         )
                     )
                 }
@@ -108,7 +143,8 @@ fun PaymentGuardScreen(
                 else  -> navController.navigate(Screen.Payment.createRoute("none"))
             }
         },
-        listKeeperOngoingTransactionLocal = dataKeeperOngoingTransactionLocal
+        listKeeperOngoingTransactionLocal = dataKeeperOngoingTransactionLocal,
+        listParkingHistory = dataKeeperHistoryLocal
     )
 
     if(alertKeeperOngoingTransaction.value) {
@@ -120,6 +156,21 @@ fun PaymentGuardScreen(
             onConfirmation = {
                 alertKeeperOngoingTransaction.value = false
                 viewModel.resetUiStateKeeperOngoingTransaction()
+            },
+            dialogTitle = "Alert",
+            dialogText = "Error: ${customError.value}",
+        )
+    }
+
+    if(alertKeeperHistory.value) {
+        AlertDialogExample(
+            onDismissRequest = {
+                alertKeeperOngoingTransaction.value = false
+                viewModel.resetUiStateKeeperHistory()
+            },
+            onConfirmation = {
+                alertKeeperOngoingTransaction.value = false
+                viewModel.resetUiStateKeeperHistory()
             },
             dialogTitle = "Alert",
             dialogText = "Error: ${customError.value}",

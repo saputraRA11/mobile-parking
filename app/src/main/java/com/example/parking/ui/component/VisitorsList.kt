@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.parking.R
 import com.example.parking.data.remote.response.ParkingHistory.Easypark
-import com.example.parking.ui.screen.payment.EasyparkHistory
+import com.example.parking.ui.screen.payment.ParkingHistory
 import com.example.parking.ui.screen.payment.KeeperOngoingTransaction
 import com.example.parking.ui.theme.BluePark
 
@@ -40,7 +40,7 @@ import com.example.parking.ui.theme.BluePark
 fun VisitorsList(
     modifier: Modifier = Modifier,
     isMonthly: Boolean = false,
-    listHistory: MutableList<EasyparkHistory> = mutableListOf()
+    listHistory: MutableList<ParkingHistory> = mutableListOf()
 ) {
     Column(modifier = modifier) {
         if(isMonthly) {
@@ -52,7 +52,7 @@ fun VisitorsList(
         LazyColumn {
             listHistory.map {
                 history ->
-                    Log.d("VisitorsList", history.toString())
+                    Log.d("VisitorsList.VisitorList", history.toString())
                     item {
                         RepeatableItemRoww(
                             visitor = history.areaName,
@@ -138,6 +138,7 @@ fun UserPayment(
         LazyColumn {
             listKeeperOngoingTransactionLocal.map {
                 ongoingTransaction ->
+                    Log.d("VisitorsList.UserPayment", ongoingTransaction.toString())
                     item {
                         UserPaymentRepeatableItemRow(
                             type = ongoingTransaction.payment,
