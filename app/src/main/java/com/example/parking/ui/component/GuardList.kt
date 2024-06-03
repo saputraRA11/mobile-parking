@@ -1,5 +1,6 @@
 package com.example.parking.ui.component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,16 +27,16 @@ import com.example.parking.ui.theme.BluePark
 @Composable
 fun GuardList(
     modifier: Modifier = Modifier,
+    listGuard: MutableState<MutableList<String>> = mutableStateOf(mutableListOf()),
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        item { RepeatableItemRow(namePlace = "Bojongsoang") }
-        item { RepeatableItemRow(namePlace = "Citra Land") }
-        item { RepeatableItemRow(namePlace = "Jember Town Square") }
-
+        listGuard.value.map {
+            item { RepeatableItemRow(namePlace = it) }
+        }
     }
 }
 
@@ -110,12 +111,12 @@ fun RepeatableItemRow(
     Row(
         modifier = Modifier.padding(vertical = 8.dp),
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.profile),
-            contentDescription = "Profile Picture",
-            modifier = Modifier.size(60.dp)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
+//        Image(
+//            painter = painterResource(id = R.drawable.profile),
+//            contentDescription = "Profile Picture",
+//            modifier = Modifier.size(60.dp)
+//        )
+//        Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
                 text = namePlace,
@@ -128,10 +129,15 @@ fun RepeatableItemRow(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
 fun GuardListPreview() {
-    GuardList()
+    GuardList(
+        listGuard = mutableStateOf(
+            mutableListOf("halo","hai")
+        )
+    )
 }
 
 @Preview(showBackground = true)

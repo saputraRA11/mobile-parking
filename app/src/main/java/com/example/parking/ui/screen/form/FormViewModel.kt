@@ -66,6 +66,11 @@ class FormViewModel(
         UiState.Loading)
     val uiStateGetUser: StateFlow<UiState<GetUserResponse>>
         get() = _uiStateGetUser
+
+    private val _uiStateGetUserGlobal: MutableStateFlow<UiState<GetUserResponse>> = MutableStateFlow(
+        UiState.Loading)
+    val uiStateGetUserGlobal: StateFlow<UiState<GetUserResponse>>
+        get() = _uiStateGetUserGlobal
     fun authenticationUser() {
         viewModelScope.launch {
             try {
@@ -173,6 +178,25 @@ class FormViewModel(
         }
     }
 
+    fun getKeeperOwnerByOwner(id:String) {
+        viewModelScope.launch {
+            try {
+                userRepository.getUser(
+                    QueryGetUser(
+                        owner_id = id
+                    )
+                ).catch {
+                    _uiStateGetUserGlobal.value = UiState.Error(it.message.toString())
+                }. collect{
+                        data ->
+                    _uiStateGetUserGlobal.value = UiState.Success(data)
+                }
+            } catch (e:Exception) {
+                _uiStateGetUserGlobal.value = UiState.Error(e.message.toString())
+            }
+        }
+    }
+
     fun addGuard(formGuard: AddGuardForm) {
         viewModelScope.launch {
             try {
@@ -182,7 +206,9 @@ class FormViewModel(
                     phone_number = "62${formGuard.guardPhone.value.text}",
                     role = convertRole("Penjaga"),
                     status = "NotActive",
-                    belong_to_parking_lot_id = formGuard.selectedArea.value
+                    belong_to_parking_lot_id = formGuard.selectedArea.value,
+                    owner_id = formGuard.ownerId.value
+
                 )
                 userRepository.createUser(bodyAddGuard).catch {
                     _uiStateAddGuard.value = UiState.Error(it.message.toString())

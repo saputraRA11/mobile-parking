@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="Parking.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-06-01T05:37:06.187257565Z">
+        <DropdownSelection timestamp="2024-06-02T16:13:04.243847537Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/home/saputra/.android/avd/Pixel_Fold_API_30.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=104733339G000749" />
             </handle>
           </Target>
         </DropdownSelection>

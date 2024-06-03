@@ -17,6 +17,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +31,8 @@ import com.example.parking.ui.component.GuardList
 @Composable
 fun DetailGuardListContent(
     modifier: Modifier = Modifier,
-    onClick:() -> Unit = { }
+    onClick:() -> Unit = { },
+    listGuard: MutableState<MutableList<String>> = mutableStateOf(mutableListOf()),
 ) {
     Scaffold(
         topBar = {
@@ -68,7 +71,9 @@ fun DetailGuardListContent(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            GuardList()
+            GuardList(
+                listGuard = listGuard
+            )
         }
     }
 }

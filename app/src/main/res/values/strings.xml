@@ -4,4 +4,8 @@
         <item>Pengelola</item>
         <item>Pengguna</item>
     </string-array>
+
+    <string name="textSlide1">Easypark mempermudah kamu untuk melakukan manajemen parkir secara digital</string>
+    <string name="textSlide2">Easypark mempermudah kamu untuk membayar parkir secara digital, dengan tunai dan non-tunai</string>
+    <string name="textSlide3">Easypark mempermudah kamu untuk melihat kilas balik biaya dan tempat parkirmu</string>
 </resources>

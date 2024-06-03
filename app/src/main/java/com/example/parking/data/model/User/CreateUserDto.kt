@@ -6,5 +6,6 @@ data class BodyCreateUser(
     val nik:String = "",
     val role:String = "",
     val status:String = "",
-    val belong_to_parking_lot_id:String = ""
+    val belong_to_parking_lot_id:String = "",
+    val owner_id:String = ""
 )

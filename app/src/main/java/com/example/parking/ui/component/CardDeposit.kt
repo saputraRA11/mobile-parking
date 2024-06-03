@@ -61,7 +61,9 @@ fun CardDeposit(
 }
 
 @Composable
-fun CardDepositCash(modifier: Modifier = Modifier) {
+fun CardDepositCash(
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
             .padding(top = 50.dp, bottom = 30.dp),

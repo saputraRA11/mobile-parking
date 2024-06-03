@@ -1,6 +1,7 @@
 package com.example.parking.ui.screen.form.guard
 
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,6 +17,7 @@ import com.example.parking.ui.screen.form.AddGuardForm
 import com.example.parking.ui.screen.form.FormViewModel
 import com.example.parking.ui.screen.home.Area
 import com.example.parking.ui.utils.ViewModelFactory
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -32,6 +34,10 @@ fun AddGuardFormScreen(
    val addGuardForm = remember {
        mutableStateOf(AddGuardForm())
    }
+
+    val userId = remember {
+        mutableStateOf("")
+    }
 
     val alertGuard = remember { mutableStateOf(false) }
     val alertArea = remember { mutableStateOf(false) }
@@ -158,6 +164,11 @@ fun AddGuardFormScreen(
             is UiState.Success -> {
                 isAuth.value = true
                 dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
+                Log.d("debug data user log","${dataUserLocal}")
+                userId.value = dataUserLocal.value.user?.id.toString()
+                Log.d("debug user id","${userId}")
+                addGuardForm.value.ownerId.value = userId.value
+                Log.d("debug data form","${addGuardForm}")
             }
             else ->{}
         }

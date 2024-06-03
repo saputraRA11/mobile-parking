@@ -284,9 +284,11 @@ fun RegisterContent(
                             isOutlined = true,
                             modifier = Modifier
                                 .clickable {
-                                    expanded = true
                                 },
                             borderSize = 3.dp,
+                            effect = {
+                                expanded = true
+                            }
                         )
 
                     },

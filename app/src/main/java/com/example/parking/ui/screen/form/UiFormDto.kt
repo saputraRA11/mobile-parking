@@ -20,6 +20,7 @@ data class AddGuardForm(
     val guardName : MutableState<TextFieldValue> = mutableStateOf(TextFieldValue()),
     val nik : MutableState<TextFieldValue> = mutableStateOf(TextFieldValue()),
     val selectedArea : MutableState<String> = mutableStateOf(""),
+    val ownerId : MutableState<String> = mutableStateOf(""),
 )
 
 data class AssignGuard(
@@ -102,6 +103,7 @@ fun transformKeeperItem(data:List<KeepersItem?>?): MutableState<MutableList<Guar
     return listGuard
 }
 
+
 fun transformUserKeeperStranger(data:List<UserItem?>?): MutableState<MutableList<AssignGuard>> {
     val listGuardStranger = mutableStateOf(mutableListOf(AssignGuard()))
     data?.forEachIndexed() {
@@ -117,6 +119,16 @@ fun transformUserKeeperStranger(data:List<UserItem?>?): MutableState<MutableList
     }
 
     return listGuardStranger
+}
+
+fun transformUserKeeperGlobal(data:List<UserItem?>?): MutableState<MutableList<String>> {
+    val listGlobal = mutableStateOf(mutableListOf(""))
+    data?.forEachIndexed() {
+            index,it ->
+        listGlobal.value.add(it?.name.toString())
+    }
+
+    return listGlobal
 }
 
 fun clearForm():UpdateAreaFormDto{

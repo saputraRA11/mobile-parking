@@ -1,6 +1,7 @@
 package com.example.parking.ui.screen.payment.management
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -70,8 +71,9 @@ fun PaymentManagementScreen(
                 customError.value = uiState.errorMessage
             }
             is UiState.Success -> {
-                val userId = dataUserLocal.value.user?.id.toString()
                 dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
+                val userId = dataUserLocal.value.user?.id.toString()
+                Log.d("debug user",userId)
                 viewModel.getAreaByOwner(userId)
                 viewModel.getCalculationMonthly(userId)
                 viewModel.getMonthlyChart(userId)

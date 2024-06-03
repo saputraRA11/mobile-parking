@@ -138,6 +138,7 @@ fun UpdateParkingAreaScreen(
                 updateAreaFormDto.value.address.value= TextFieldValue(result?.address.toString())
                 updateAreaFormDto.value.carPrice.value=TextFieldValue(result?.carCost.toString().replace(".0",""))
                 updateAreaFormDto.value.motorPrice.value=TextFieldValue(result?.motorCost.toString().replace(".0",""))
+                Log.d("debug json","${updateAreaFormDto.value}")
                 Log.d("debug data keepers","${result?.keepers}")
                 updateAreaFormDto.value.listGuard.value = transformKeeperItem(result?.keepers).value
 
@@ -151,6 +152,7 @@ fun UpdateParkingAreaScreen(
             navController.navigateUp()
         },
         submitClick = {
+            Log.d("debug json","${updateAreaFormDto.value}")
             viewModel.updateArea(formArea = transformUpdateAreaDto(updateAreaFormDto.value))
         },
         detailGuardClick = {

@@ -3,10 +3,11 @@ package com.example.parking.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +21,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -32,32 +36,51 @@ fun SliderOnboarding(
         painterResource(id = R.drawable.onboarding_1),
         painterResource(id = R.drawable.onboarding_3)
     )
+    val textSlider = listOf(
+        stringResource(id = R.string.textSlide1),
+        stringResource(id = R.string.textSlide2),
+        stringResource(id = R.string.textSlide3)
+    )
 
-    HorizontalPager(
-        count = imageSlider.size,
-        state = pagerState,
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        modifier = modifier.fillMaxWidth(),
-    ) { pageIndex ->
-        Image(
-            painter = imageSlider[pageIndex],
-            contentDescription = "Image On Boarding",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .aspectRatio(1f)
-        )
-    }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        HorizontalPager(
+            count = imageSlider.size,
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth()
+        ) { pageIndex ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Image(
+                    painter = imageSlider[pageIndex],
+                    contentDescription = "Image On Boarding",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                )
+                Text(
+                    text = textSlider[pageIndex],
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
 
-
-    HorizontalPagerIndicator(
+        HorizontalPagerIndicator(
             pagerState = pagerState,
-            modifier = modifier
-                .padding(16.dp),
+            modifier = Modifier.padding(top = 16.dp),
             activeColor = BluePark,
             inactiveColor = GreyDark,
-            spacing = 20.dp
+            spacing = 8.dp
         )
+    }
 }
 
 @Preview(showBackground = true)

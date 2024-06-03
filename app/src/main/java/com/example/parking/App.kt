@@ -1,5 +1,7 @@
 package com.example.parking
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,6 +18,7 @@ import com.example.parking.ui.screen.form.FormHostNavigation
 import com.example.parking.ui.screen.home.HomeHostNavigation
 import com.example.parking.ui.screen.payment.PaymentHostNavigation
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ParkingApp(
     modifier: Modifier = Modifier,
@@ -77,6 +80,7 @@ fun ParkingApp(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(
     showBackground = true
 )

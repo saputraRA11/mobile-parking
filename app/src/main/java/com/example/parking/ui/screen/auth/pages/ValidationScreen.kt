@@ -86,6 +86,7 @@ fun ValidationScreen(
         when (uiState) {
             is UiState.Success -> {
                 coroutineScope.launch {
+                    Log.d("debug validation","${uiState.data?.data}")
                     val dataUser = Json.encodeToString(uiState.data?.data)
                     viewModel.saveUser(dataUser)
                     authorized.value = convertRoleV2(uiState.data?.data?.user?.role.toString())
