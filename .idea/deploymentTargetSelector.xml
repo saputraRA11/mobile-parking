@@ -28,6 +28,9 @@
       <SelectionState runConfigName="PreviewMyBarChart">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="fauzanramadhana.AndroidStudioProjects.mobile-parking.Parking.app">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
