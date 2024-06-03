@@ -318,6 +318,7 @@ class PaymentViewModel(
                     createdAtStartFilter = createdAtStartFilter,
                     createdAtEndFilter = createdAtEndFilter,
                 )
+                
                 if(isOwner){
                     filter = filter.copy(ownerId = id)
                 } else {
