@@ -18,7 +18,7 @@ import com.example.parking.ui.theme.BluePark
 @Composable
 fun CardDeposit(
     modifier: Modifier = Modifier,
-    priceMonthly:String = ""
+    priceMonthly:String = "",
 ) {
     Box(
         modifier = modifier,
@@ -62,7 +62,8 @@ fun CardDeposit(
 
 @Composable
 fun CardDepositCash(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    price: Int = 0
 ) {
     Box(
         modifier = modifier
@@ -87,7 +88,7 @@ fun CardDepositCash(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Rp5.000",
+                    text = "Rp${price}",
                     color = Color.White,
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,

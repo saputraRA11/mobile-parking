@@ -18,6 +18,7 @@ import com.example.parking.ui.common.UiState
 import com.example.parking.ui.component.AlertDialogExample
 import com.example.parking.ui.content.payment.guard.PaymentGuardContent
 import com.example.parking.ui.navigation.Screen
+import com.example.parking.ui.screen.payment.EasyparkHistory
 import com.example.parking.ui.screen.payment.KeeperOngoingTransaction
 import com.example.parking.ui.screen.payment.PaymentViewModel
 import com.example.parking.ui.utils.ViewModelFactory
@@ -45,9 +46,21 @@ fun PaymentGuardScreen(
     val dataKeeperOngoingTransactionLocal = remember {
         mutableListOf<KeeperOngoingTransaction>()
     }
+
+    val dataMonthlyHistoryLocal = remember {
+        mutableListOf<EasyparkHistory>()
+    }
+
+    val dataDailyHistoryLocal = remember {
+        mutableListOf<EasyparkHistory>()
+    }
+
     val alertKeeperOngoingTransaction = remember { mutableStateOf(false) }
 
     val alertUser = remember { mutableStateOf(false) }
+    val alertMonthlyHistory = remember { mutableStateOf(false) }
+    val alertDailyHistory = remember { mutableStateOf(false) }
+    val alertCalculation = remember { mutableStateOf(false) }
     val customError = remember {
         mutableStateOf("")
     }
@@ -55,7 +68,6 @@ fun PaymentGuardScreen(
         mutableStateOf("")
     }
 
-    val alertCalculation = remember { mutableStateOf(false) }
 
     viewModel.uiStateUser.collectAsState(initial = UiState.Loading).value.let {
             uiState ->
@@ -70,7 +82,9 @@ fun PaymentGuardScreen(
                     val userId = dataUserLocal.value.user?.id.toString()
                     Log.d("debug id user",userId)
                     viewModel.getKeeperOngoingTransaction(userId)
-//                    viewModel.getCalculationMonthly(id = userId)
+                    viewModel.getMonthlyHistory(userId, iskeeper = true)
+                    viewModel.getDailyHistory(userId)
+                    viewModel.getCalculationMonthly(id = userId)
                 }
             }
             is UiState.Loading -> {}
@@ -110,8 +124,60 @@ fun PaymentGuardScreen(
                 customError.value = uiState.errorMessage
             }
             is UiState.Success -> {
-                if(uiState.data?.data?.sumAll !== null){
-                    priceCalculation.value = uiState.data.data.sumAll.toString()
+                Log.d("debug montly price","${uiState.data?.data}")
+                priceCalculation.value = uiState.data?.data?.sumAll.toString()
+                Log.d("debug montly price state","${priceCalculation}")
+            }
+            is UiState.Loading -> {}
+        }
+    }
+
+    viewModel.uiStateMonthlyHistory.collectAsState(initial = UiState.Loading).value.let {
+            uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                alertMonthlyHistory.value = true
+                customError.value = uiState.errorMessage
+            }
+            is UiState.Success -> {
+                dataMonthlyHistoryLocal.clear()
+                uiState.data?.data?.parkingHistory?.map {
+                        history ->
+                    dataMonthlyHistoryLocal.add(
+                        EasyparkHistory(
+                            areaName = history?.parkingLot?.areaName.toString(),
+                            checkIn = history?.checkInDate.toString(),
+                            checkOut = history?.checkOutDate.toString(),
+                            payment = history?.payment.toString(),
+                            amount = history?.totalAmount.toString()
+                        )
+                    )
+                }
+            }
+            is UiState.Loading -> {}
+        }
+    }
+
+    viewModel.uiStateDailyHistory.collectAsState(initial = UiState.Loading).value.let {
+            uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                alertDailyHistory.value = true
+                customError.value = uiState.errorMessage
+            }
+            is UiState.Success -> {
+                dataDailyHistoryLocal.clear()
+                uiState.data?.data?.parkingHistory?.map {
+                        history ->
+                    dataDailyHistoryLocal.add(
+                        EasyparkHistory(
+                            areaName = history?.parkingLot?.areaName.toString(),
+                            checkIn = history?.checkInDate.toString(),
+                            checkOut = history?.checkOutDate.toString(),
+                            payment = history?.payment.toString(),
+                            amount = history?.totalAmount.toString()
+                        )
+                    )
                 }
             }
             is UiState.Loading -> {}
@@ -134,7 +200,9 @@ fun PaymentGuardScreen(
             }
         },
         listKeeperOngoingTransactionLocal = dataKeeperOngoingTransactionLocal,
-        priceMonthly = priceCalculation.value
+        priceMonthly = priceCalculation,
+        listMonthlyHistory = dataMonthlyHistoryLocal,
+        listDailyHistory = dataDailyHistoryLocal
     )
 
     if(alertKeeperOngoingTransaction.value) {
@@ -161,6 +229,36 @@ fun PaymentGuardScreen(
             onConfirmation = {
                 alertKeeperOngoingTransaction.value = false
                 viewModel.resetUiStateKeeperOngoingTransaction()
+            },
+            dialogTitle = "Alert",
+            dialogText = "Error: ${customError.value}",
+        )
+    }
+
+    if(alertMonthlyHistory.value) {
+        AlertDialogExample(
+            onDismissRequest = {
+                alertMonthlyHistory.value = false
+                viewModel.resetUiStateMonthlyHistory()
+            },
+            onConfirmation = {
+                alertMonthlyHistory.value = false
+                viewModel.resetUiStateMonthlyHistory()
+            },
+            dialogTitle = "Alert",
+            dialogText = "Error: ${customError.value}",
+        )
+    }
+
+    if(alertDailyHistory.value) {
+        AlertDialogExample(
+            onDismissRequest = {
+                alertDailyHistory.value = false
+                viewModel.resetUiStateDailyHistory()
+            },
+            onConfirmation = {
+                alertDailyHistory.value = false
+                viewModel.resetUiStateDailyHistory()
             },
             dialogTitle = "Alert",
             dialogText = "Error: ${customError.value}",

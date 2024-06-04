@@ -44,6 +44,7 @@ fun PaymentScreen(
     val dataEasyparkHistoryLocal = remember {
         mutableListOf<EasyparkHistory>()
     }
+
     val alertEasyparkHistory = remember { mutableStateOf(false) }
 
     val alertUser = remember { mutableStateOf(false) }
@@ -61,14 +62,14 @@ fun PaymentScreen(
             is UiState.Success -> {
                 dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
                 coroutineScope.launch {
-                    viewModel.getEasyparkHistory(dataUserLocal.value.user?.id.toString())
+                    viewModel.getMonthlyHistory(dataUserLocal.value.user?.id.toString())
                 }
             }
             is UiState.Loading -> {}
         }
     }
 
-    viewModel.uiStateaEasyparkHistory.collectAsState(initial = UiState.Loading).value.let {
+    viewModel.uiStateMonthlyHistory.collectAsState(initial = UiState.Loading).value.let {
             uiState ->
         when (uiState) {
             is UiState.Error -> {
@@ -105,11 +106,11 @@ fun PaymentScreen(
         AlertDialogExample(
             onDismissRequest = {
                 alertEasyparkHistory.value = false
-                viewModel.resetUiStateEasyparkHistory()
+                viewModel.resetUiStateMonthlyHistory()
             },
             onConfirmation = {
                 alertEasyparkHistory.value = false
-                viewModel.resetUiStateEasyparkHistory()
+                viewModel.resetUiStateMonthlyHistory()
             },
             dialogTitle = "Alert",
             dialogText = "Error: ${customError.value}",

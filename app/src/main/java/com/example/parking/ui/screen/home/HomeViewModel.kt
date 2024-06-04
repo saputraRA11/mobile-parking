@@ -1,5 +1,7 @@
 package com.example.parking.ui.screen.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import com.example.parking.data.repository.UserRepository
 import com.example.parking.ui.common.UiState
@@ -11,6 +13,7 @@ import com.example.parking.data.model.ParkingHistory.BodyCreateHistory
 import com.example.parking.data.model.ParkingHistory.BodyUpdateHistory
 import com.example.parking.data.model.ParkingHistory.CalculationHistoryDto
 import com.example.parking.data.model.ParkingHistory.MonthlyQueryHistoryDto
+import com.example.parking.data.model.ParkingHistory.QueryAggregateHistory
 import com.example.parking.data.model.User.BodyCreateUser
 import com.example.parking.data.preferences.SettingLocalStorage
 import com.example.parking.data.remote.response.Parking.GetParkingOwnerResponse
@@ -18,12 +21,16 @@ import com.example.parking.data.remote.response.Parking.GetDetailParkingResponse
 import com.example.parking.data.remote.response.ParkingHistory.ActiveHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.CalculationHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.CreateHistoryResponse
+import com.example.parking.data.remote.response.ParkingHistory.GetHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.MonthlyCalculationHistoryResponse
 import com.example.parking.data.remote.response.ParkingHistory.UpdateHistoryResponse
 import com.example.parking.data.repository.ParkingHistoryRepository
 import com.example.parking.data.repository.ParkingRepository
 import com.example.parking.ui.utils.convertStatusV2
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class HomeViewModel(
     private  val userRepository: UserRepository,
@@ -55,7 +62,9 @@ class HomeViewModel(
     val uiStateUpdateHistory: StateFlow<UiState<UpdateHistoryResponse>>
         get() = _uiStateUpdateHistory
 
-
+    private val _uiStateHistoryCash: MutableStateFlow<UiState<GetHistoryResponse>> = MutableStateFlow(UiState.Loading)
+    val uiStateHistoryCash: StateFlow<UiState<GetHistoryResponse>>
+        get() = _uiStateHistoryCash
     fun authenticationUser() {
         viewModelScope.launch {
             try {
@@ -76,7 +85,7 @@ class HomeViewModel(
             try {
                 parkingRepostiory.getParkingByOwner(id).catch {
                     _uiStateAreaOwner.value = UiState.Error(it.message.toString())
-                }.collect {
+           }.collect {
                         data ->
                     _uiStateAreaOwner.value = UiState.Success(data)
                 }
@@ -157,7 +166,47 @@ class HomeViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCashHistory(id: String) {
+        viewModelScope.launch {
+            try {
+                val currentDate = LocalDate.now()
 
+                val startOfDay = currentDate.atStartOfDay()
+                val endOfDay = currentDate.atTime(23, 59, 59, 999999999)
+
+                val localZoneId = ZoneId.systemDefault()
+
+                val startOfDayLocal = startOfDay.atZone(localZoneId)
+                val endOfDayLocal = endOfDay.atZone(localZoneId)
+
+                val startOfDayUTC = startOfDayLocal.withZoneSameInstant(ZoneId.of("UTC"))
+                val endOfDayUTC = endOfDayLocal.withZoneSameInstant(ZoneId.of("UTC"))
+
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+
+                val startOfDayUTCString = startOfDayUTC.format(formatter)
+                val endOfDayUTCString = endOfDayUTC.format(formatter)
+
+                val queryAggregateHistory = QueryAggregateHistory(
+//                    created_at_start_filter = startOfDayUTCString,
+//                    created_at_end_filter = endOfDayUTCString,
+                    owner_id = id,
+                    ticket_status = "NotActive",
+                    payment_type = "Cash"
+                )
+
+                parkingHistoryRepository.aggregateHistory(queryAggregateHistory).catch {
+                    _uiStateHistoryCash.value = UiState.Error(it.message.toString())
+                }.collect {
+                        data ->
+                    _uiStateHistoryCash.value = UiState.Success(data)
+                }
+            } catch (e:Exception) {
+                _uiStateHistoryCash.value = UiState.Error(e.message.toString())
+            }
+        }
+    }
 
     suspend fun saveParkingId(id:String) {
         localStorage.saveSetting("parkingId",id)
@@ -180,8 +229,11 @@ class HomeViewModel(
         _uiStateDetailArea.value = UiState.Loading
     }
 
-
     fun resetUiStateActiveHistoryUser() {
         _uiStateActiveHistoryUser.value = UiState.Loading
+    }
+
+    fun resetUiStateHistoryCash() {
+        _uiStateHistoryCash.value = UiState.Loading
     }
 }

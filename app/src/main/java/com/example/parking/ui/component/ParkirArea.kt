@@ -81,7 +81,7 @@ fun RepeatableItemsRow(
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // Increased spacing
                 Text(
-                    text = if (guard == 0) "Tidak ada penjaga" else "$guard Penjaga",
+                    text = "$guard Penjaga",
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 18.sp), // Increased text size
                     color = BluePark
                 )

@@ -51,10 +51,6 @@ class PaymentViewModel(
     val uiStateaAreaOwner: StateFlow<UiState<GetParkingOwnerResponse>>
         get() = _uiStateAreaOwner
 
-    private val _uiStateaEasyparkHistory: MutableStateFlow<UiState<GetHistoryResponse>> = MutableStateFlow(UiState.Loading)
-    val uiStateaEasyparkHistory: StateFlow<UiState<GetHistoryResponse>>
-        get() = _uiStateaEasyparkHistory
-
     private val _uiStateKeeperOngoingTransaction: MutableStateFlow<UiState<GetHistoryResponse>> = MutableStateFlow(UiState.Loading)
     val uiStateKeeperOngoingTransaction: StateFlow<UiState<GetHistoryResponse>>
         get() = _uiStateKeeperOngoingTransaction
@@ -87,6 +83,14 @@ class PaymentViewModel(
     private val _uiStateCalculation: MutableStateFlow<UiState<CalculationHistoryResponse>> = MutableStateFlow(UiState.Loading)
     val uiStateCalculation: StateFlow<UiState<CalculationHistoryResponse>>
         get() = _uiStateCalculation
+
+    private val _uiStateDailyHistory: MutableStateFlow<UiState<GetHistoryResponse>> = MutableStateFlow(UiState.Loading)
+    val uiStateDailyHistory: StateFlow<UiState<GetHistoryResponse>>
+        get() = _uiStateDailyHistory
+
+    private val _uiStateMonthlyHistory: MutableStateFlow<UiState<GetHistoryResponse>> = MutableStateFlow(UiState.Loading)
+    val uiStateMonthlyHistory: StateFlow<UiState<GetHistoryResponse>>
+        get() = _uiStateMonthlyHistory
     fun authenticationUser() {
         viewModelScope.launch {
             try {
@@ -133,7 +137,7 @@ class PaymentViewModel(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getEasyparkHistory(id: String) {
+    fun getMonthlyHistory(id: String,iskeeper:Boolean = false) {
         viewModelScope.launch {
             try {
                 val currentYearMonth = YearMonth.now()
@@ -154,21 +158,26 @@ class PaymentViewModel(
                 val startOfMonthUTCString = startOfMonthUTC.format(formatter)
                 val endOfMonthUTCString = endOfMonthUTC.format(formatter)
 
-                val queryAggregateHistory = QueryAggregateHistory(
-                    created_at_start_filter = startOfMonthUTCString,
-                    created_at_end_filter = endOfMonthUTCString,
-                    easypark_id = id,
+                var queryAggregateHistory = QueryAggregateHistory(
+//                    created_at_start_filter = startOfMonthUTCString,
+//                    created_at_end_filter = endOfMonthUTCString,
                     ticket_status = "NotActive",
                 )
 
+                if(iskeeper){
+                    queryAggregateHistory = queryAggregateHistory.copy(keeper_id = id)
+                } else {
+                    queryAggregateHistory = queryAggregateHistory.copy(easypark_id = id)
+                }
+
                 parkingHistoryRepository.aggregateHistory(queryAggregateHistory).catch {
-                    _uiStateaEasyparkHistory.value = UiState.Error(it.message.toString())
+                    _uiStateMonthlyHistory.value = UiState.Error(it.message.toString())
                 }.collect {
                         data ->
-                    _uiStateaEasyparkHistory.value = UiState.Success(data)
+                    _uiStateMonthlyHistory.value = UiState.Success(data)
                 }
             } catch (e:Exception) {
-                _uiStateaEasyparkHistory.value = UiState.Error(e.message.toString())
+                _uiStateMonthlyHistory.value = UiState.Error(e.message.toString())
             }
         }
     }
@@ -210,6 +219,47 @@ class PaymentViewModel(
                 }
             } catch (e:Exception) {
                 _uiStateKeeperOngoingTransaction.value = UiState.Error(e.message.toString())
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getDailyHistory(id: String) {
+        viewModelScope.launch {
+            try {
+                val currentDate = LocalDate.now()
+
+                val startOfDay = currentDate.atStartOfDay()
+                val endOfDay = currentDate.atTime(23, 59, 59, 999999999)
+
+                val localZoneId = ZoneId.systemDefault()
+
+                val startOfDayLocal = startOfDay.atZone(localZoneId)
+                val endOfDayLocal = endOfDay.atZone(localZoneId)
+
+                val startOfDayUTC = startOfDayLocal.withZoneSameInstant(ZoneId.of("UTC"))
+                val endOfDayUTC = endOfDayLocal.withZoneSameInstant(ZoneId.of("UTC"))
+
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+
+                val startOfDayUTCString = startOfDayUTC.format(formatter)
+                val endOfDayUTCString = endOfDayUTC.format(formatter)
+
+                val queryAggregateHistory = QueryAggregateHistory(
+//                    created_at_start_filter = startOfDayUTCString,
+//                    created_at_end_filter = endOfDayUTCString,
+                    keeper_id = id,
+                    ticket_status = "NotActive",
+                )
+
+                parkingHistoryRepository.aggregateHistory(queryAggregateHistory).catch {
+                    _uiStateDailyHistory.value = UiState.Error(it.message.toString())
+                }.collect {
+                        data ->
+                    _uiStateDailyHistory.value = UiState.Success(data)
+                }
+            } catch (e:Exception) {
+                _uiStateDailyHistory.value = UiState.Error(e.message.toString())
             }
         }
     }
@@ -361,8 +411,12 @@ class PaymentViewModel(
         _uiStateDataQr.value = UiState.Loading
     }
 
-    fun resetUiStateEasyparkHistory() {
-        _uiStateaEasyparkHistory.value = UiState.Loading
+    fun resetUiStateMonthlyHistory() {
+        _uiStateMonthlyHistory.value = UiState.Loading
+    }
+
+    fun resetUiStateDailyHistory() {
+        _uiStateMonthlyHistory.value = UiState.Loading
     }
 
     fun resetUiStateKeeperOngoingTransaction() {

@@ -138,11 +138,10 @@ fun LoginContent(
                                 color = Color.Black,
                                 IconVector = Icons.Default.Clear,
                                 isOutlined = true,
-                                modifier = Modifier
-                                    .clickable {
-                                        phoneNumber.value = TextFieldValue("")
-                                    },
                                 borderSize = 3.dp,
+                                effect = {
+                                    phoneNumber.value = TextFieldValue("")
+                                }
                             )
 
                         },

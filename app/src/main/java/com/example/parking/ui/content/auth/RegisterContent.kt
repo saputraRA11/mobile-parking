@@ -168,13 +168,12 @@ fun RegisterContent(
                                 color = Color.Black,
                                 IconVector = Icons.Default.Clear,
                                 isOutlined = true,
-                                modifier = Modifier
-                                    .clickable {
-                                        formUserUi.value = formUserUi.value.copy(phone_number = mutableStateOf(
-                                            TextFieldValue("")
-                                        ))
-                                    },
                                 borderSize = 3.dp,
+                                effect = {
+                                    formUserUi.value = formUserUi.value.copy(phone_number = mutableStateOf(
+                                        TextFieldValue("")
+                                    ))
+                                }
                             )
 
                         },
@@ -206,14 +205,12 @@ fun RegisterContent(
                             color = Color.Black,
                             IconVector = Icons.Default.Clear,
                             isOutlined = true,
-                            modifier = Modifier
-                                .clickable {
-                                    formUserUi.value = formUserUi.value.copy(name = mutableStateOf(
-                                        TextFieldValue("")
-                                    )
-                                    )
-                                },
                             borderSize = 3.dp,
+                            effect = {
+                                formUserUi.value = formUserUi.value.copy(name = mutableStateOf(
+                                    TextFieldValue("")
+                                ))
+                            }
                         )
 
                     },
@@ -243,14 +240,12 @@ fun RegisterContent(
                             color = Color.Black,
                             IconVector = Icons.Default.Clear,
                             isOutlined = true,
-                            modifier = Modifier
-                                .clickable {
-                                    formUserUi.value = formUserUi.value.copy(nik = mutableStateOf(
-                                        TextFieldValue("")
-                                    )
-                                    )
-                                },
                             borderSize = 3.dp,
+                            effect = {
+                                formUserUi.value = formUserUi.value.copy(nik = mutableStateOf(
+                                    TextFieldValue("")
+                                ))
+                            }
                         )
 
                     },
@@ -282,9 +277,6 @@ fun RegisterContent(
                             color = Color.Black,
                             IconVector = icon,
                             isOutlined = true,
-                            modifier = Modifier
-                                .clickable {
-                                },
                             borderSize = 3.dp,
                             effect = {
                                 expanded = true
