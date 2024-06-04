@@ -35,7 +35,8 @@ fun PaymentCashContent(
     modifier: Modifier = Modifier,
     backClick: () -> Unit = {},
     onSubmit:() -> Unit = {},
-    isEnabled: MutableState<Boolean> =  mutableStateOf(true)
+    isEnabled: MutableState<Boolean> =  mutableStateOf(true),
+    price:Int = 0
 ) {
     val buttonShape: Shape = RoundedCornerShape(100.dp)
 
@@ -68,7 +69,9 @@ fun PaymentCashContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CashText()
-            CardDepositCash()
+            CardDepositCash(
+                price = price
+            )
             Button(
                 onClick = onSubmit,
                 colors = ButtonDefaults.buttonColors(

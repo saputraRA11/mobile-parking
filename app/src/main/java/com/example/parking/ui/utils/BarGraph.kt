@@ -35,19 +35,14 @@ import kotlin.math.round
 @Composable
 fun BarGraph(
     graphBarData: List<Float>,
-    xAxisScaleData: List<String>,
-    barData_: List<Int>,
+    xAxisScaleData: MutableState<MutableList<String>>,
+    barData_: MutableState<MutableList<Int>>,
     height: Dp,
     roundType: BarType,
     barWidth: Dp,
     barColor: Color,
     barArrangement: Arrangement.Horizontal
 ) {
-
-    val barData by remember {
-        mutableStateOf(barData_+0)
-    }
-
     val configuration = LocalConfiguration.current
     val width = configuration.screenWidthDp.dp
 
@@ -97,11 +92,11 @@ fun BarGraph(
                 .padding(bottom = 10.dp)
                 .fillMaxSize()) {
 
-                val yAxisScaleText = (barData.max()) / 3f
+                val yAxisScaleText = ((barData_.value + 0).max()) / 3f
                 (0..3).forEach { i ->
                     drawContext.canvas.nativeCanvas.apply {
                         drawText(
-                            "${round(barData.min() + yAxisScaleText * i).toInt()}K",
+                            "${round((barData_.value + 0).min() + yAxisScaleText * i).toInt()}",
                             40f,
                             size.height - yAxisScaleSpacing - i * size.height / 3f,
                             textPaint
@@ -217,7 +212,7 @@ fun BarGraph(
 
                                 Text(
                                     modifier = Modifier.padding(bottom = 3.dp),
-                                    text = xAxisScaleData[index],
+                                    text = xAxisScaleData.value[index],
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Medium,
                                     textAlign = TextAlign.Center,
@@ -257,6 +252,8 @@ fun TransformChartGraph(
     column:MutableState<MutableList<String>> = mutableStateOf(mutableListOf()),
     dataset:MutableState<MutableList<Int>> = mutableStateOf(mutableListOf())
 ){
+//    val dummyset = mutableListOf(2)
+//    val column = mutableListOf("June")
     Column(
         modifier = Modifier
             .padding(horizontal = 30.dp),
@@ -266,14 +263,29 @@ fun TransformChartGraph(
 
         val floatValue = mutableListOf<Float>()
 
+
         dataset.value.forEachIndexed { index, value ->
             floatValue.add(index = index, element = value.toFloat()/dataset.value.max().toFloat())
         }
 
+//        dummyset.forEachIndexed { index, value ->
+//            floatValue.add(index = index, element = value.toFloat()/dummyset.max().toFloat())
+//        }
+//        BarGraph(
+//            graphBarData = floatValue,
+//            xAxisScaleData = column.toList(),
+//            barData_ = dummyset.toList(),
+//            height = 300.dp,
+//            roundType = BarType.TOP_CURVED,
+//            barWidth = 50.dp,
+//            barColor = BluePark,
+//            barArrangement = Arrangement.SpaceEvenly
+//        )
+
         BarGraph(
             graphBarData = floatValue,
-            xAxisScaleData = column.value.toList(),
-            barData_ = dataset.value.toList(),
+            xAxisScaleData = column,
+            barData_ = dataset,
             height = 300.dp,
             roundType = BarType.TOP_CURVED,
             barWidth = 50.dp,
@@ -289,22 +301,21 @@ fun TransformChartGraph(
 @Composable
 fun ExampleGraph(){
     val column = remember {
-        mutableStateOf(mutableListOf(
-            "Maret",
-            "April",
-            "Mei"
-        ))
+        mutableListOf(
+            "June",
+        )
     }
 
     val dataset = remember {
-        mutableStateOf(mutableListOf(
-            30,50,100
-        ))
+
+        mutableListOf(
+            2
+        )
     }
-    TransformChartGraph(
-        column = column,
-        dataset = dataset
-    )
+//    TransformChartGraph(
+//        column = column,
+//        dataset = dataset
+//    )
 }
 
 enum class BarType {

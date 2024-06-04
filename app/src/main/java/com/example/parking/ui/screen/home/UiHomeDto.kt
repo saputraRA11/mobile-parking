@@ -7,7 +7,10 @@ data class Area(
     val name: String = "",
     val guardCount: Int = 0
 )
-
+data class HistoryCashDto(
+    val userName:String = "",
+    val amount: Int = 0,
+)
 data class UpdateParkingHistoryDto(
     val idTransaction:String = "",
     val isConfirm:Boolean = false,

@@ -1,9 +1,12 @@
 package com.example.parking.ui.screen.home.management
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -18,11 +21,14 @@ import com.example.parking.ui.component.AlertDialogExample
 import com.example.parking.ui.content.home.management.HomeManagementContent
 import com.example.parking.ui.navigation.Screen
 import com.example.parking.ui.screen.home.Area
+import com.example.parking.ui.screen.home.HistoryCashDto
 import com.example.parking.ui.screen.home.HomeViewModel
+import com.example.parking.ui.screen.payment.EasyparkHistory
 import com.example.parking.ui.utils.ViewModelFactory
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeManagementScreen(
     navController: NavHostController = rememberNavController(),
@@ -40,12 +46,17 @@ fun HomeManagementScreen(
         mutableStateOf(DataValidation())
     }
 
+    val dataHistoryCash = remember {
+        mutableStateOf(mutableListOf(HistoryCashDto()) )
+    }
+
     val dataAreaLocal = remember {
         mutableListOf<Area>()
     }
 
     val alertArea = remember { mutableStateOf(false) }
     val alertUser = remember { mutableStateOf(false) }
+    val alertHistory = remember { mutableStateOf(false) }
     val customError = remember {
         mutableStateOf("")
     }
@@ -61,6 +72,7 @@ fun HomeManagementScreen(
                 dataUserLocal.value = Json.decodeFromString(uiState.data.toString())
                 coroutineScope.launch {
                     viewModel.getAreaByOwner(dataUserLocal.value.user?.id.toString())
+                    viewModel.getCashHistory(dataUserLocal.value.user?.id.toString())
                 }
             }
             is UiState.Loading -> {}
@@ -81,12 +93,37 @@ fun HomeManagementScreen(
                     dataAreaLocal.add(
                         Area(
                         id = area?.id.toString(),
-                        name = area?.areaName.toString()
+                        name = area?.areaName.toString(),
+                        guardCount = 0
                     )
                     )
                 }
             }
             is UiState.Loading -> {}
+        }
+    }
+
+    viewModel.uiStateHistoryCash.collectAsState(initial = UiState.Loading).value.let {
+            uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                alertHistory.value = true
+                customError.value = uiState.errorMessage
+            }
+            is UiState.Success -> {
+                dataHistoryCash.value.clear()
+                uiState.data?.data?.parkingHistory?.map {
+                        history ->
+                    dataHistoryCash.value.add(
+                        HistoryCashDto(
+                            userName = "default",
+                            amount = history?.totalAmount.toString().replace(".0","").toInt()
+                        )
+                    )
+                }
+            }
+            is UiState.Loading -> {
+            }
         }
     }
 
@@ -111,8 +148,10 @@ fun HomeManagementScreen(
 
             navController.navigate(Screen.Form.createRoute("area","update"))
         },
-        listArea = dataAreaLocal
+        listArea = dataAreaLocal,
+        listHistory = dataHistoryCash
     )
+
     if(alertUser.value) {
         AlertDialogExample(
             onDismissRequest = {
@@ -139,6 +178,21 @@ fun HomeManagementScreen(
             onConfirmation = {
                 alertArea.value = false
                 viewModel.resetUiStateAreaByOwner()
+            },
+            dialogTitle = "Alert",
+            dialogText = "Error: ${customError.value}",
+        )
+    }
+
+    if(alertHistory.value) {
+        AlertDialogExample(
+            onDismissRequest = {
+                alertHistory.value = false
+                viewModel.resetUiStateHistoryCash()
+            },
+            onConfirmation = {
+                alertHistory.value = false
+                viewModel.resetUiStateHistoryCash()
             },
             dialogTitle = "Alert",
             dialogText = "Error: ${customError.value}",

@@ -23,6 +23,7 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -58,7 +59,9 @@ fun PaymentGuardContent(
     homeClick: () -> Unit = {},
     detailPayment:(id:String,type:String) -> Unit = { id: String, type: String -> },
     listKeeperOngoingTransactionLocal: MutableList<KeeperOngoingTransaction> = mutableListOf(),
-    priceMonthly:String = ""
+    priceMonthly:MutableState<String> = mutableStateOf(""),
+    listMonthlyHistory: MutableList<EasyparkHistory> = mutableListOf() ,
+    listDailyHistory: MutableList<EasyparkHistory> = mutableListOf()
 ) {
     val isButton = remember { mutableStateOf(true) }
 
@@ -226,8 +229,13 @@ fun PaymentGuardContent(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ){
                 if (isButton.value) {
-                    CardDeposit(modifier = Modifier.height(200.dp))
-                    VisitorsList()
+                    CardDeposit(
+                        modifier = Modifier.height(200.dp),
+                        priceMonthly = priceMonthly.value
+                    )
+                    VisitorsList(
+                        listHistory = listMonthlyHistory
+                    )
                 } else {
                     UserPayment(
                         modifier = Modifier.height(200.dp),
@@ -237,6 +245,7 @@ fun PaymentGuardContent(
                     VisitorsList(
                         modifier = Modifier.weight(1f),
                         isMonthly = true,
+                        listHistory =  listDailyHistory
                     )
                 }
             }

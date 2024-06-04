@@ -31,9 +31,13 @@ fun PaymentCashScreen(
     val parkingHistoryId = remember {
         mutableStateOf("")
     }
+    val price = remember {
+        mutableStateOf(0)
+    }
 
     val alertHistoryId = remember { mutableStateOf(false) }
     val alertUpdate = remember { mutableStateOf(false) }
+    val alertHistory = remember { mutableStateOf(false) }
     val isEnabled = remember { mutableStateOf(true) }
     val customError = remember {
         mutableStateOf("")
@@ -46,7 +50,8 @@ fun PaymentCashScreen(
         onSubmit = {
             viewModel.updateParkingHistoryCash(parkingHistoryId.value)
         },
-        isEnabled = isEnabled
+        isEnabled = isEnabled,
+        price = price.value
     )
 
     viewModel.uiStateHistoryId.collectAsState(initial = UiState.Loading).value.let {
@@ -58,6 +63,7 @@ fun PaymentCashScreen(
             }
             is UiState.Success -> {
                 parkingHistoryId.value = uiState.data.toString()
+                viewModel.getHistoryById(parkingHistoryId.value)
             }
             is UiState.Loading -> {}
         }
@@ -77,6 +83,20 @@ fun PaymentCashScreen(
         }
     }
 
+    viewModel.uiStateDetailHistory.collectAsState(initial = UiState.Loading).value.let {
+            uiState ->
+        when (uiState) {
+            is UiState.Error -> {
+                alertHistory.value = true
+                customError.value = uiState.errorMessage
+            }
+            is UiState.Success -> {
+                price.value = uiState.data?.data?.parkingHistory?.amount!!
+            }
+            is UiState.Loading -> {}
+        }
+    }
+
     if(alertUpdate.value) {
         AlertDialogExample(
             onDismissRequest = {
@@ -86,6 +106,21 @@ fun PaymentCashScreen(
             onConfirmation = {
                 alertUpdate.value = false
                 viewModel.resetUiStateUpdateHistory()
+            },
+            dialogTitle = "Alert",
+            dialogText = "Error: ${customError.value}",
+        )
+    }
+
+    if(alertHistory.value) {
+        AlertDialogExample(
+            onDismissRequest = {
+                alertHistory.value = false
+                viewModel.resetDetailHistory()
+            },
+            onConfirmation = {
+                alertHistory.value = false
+                viewModel.resetDetailHistory()
             },
             dialogTitle = "Alert",
             dialogText = "Error: ${customError.value}",

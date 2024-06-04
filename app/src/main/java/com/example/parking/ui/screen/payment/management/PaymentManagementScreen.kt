@@ -133,6 +133,7 @@ fun PaymentManagementScreen(
                 val result = uiState.data?.data
                 counting.value.months.value = transformMonths(result?.toMutableList()).value
                 counting.value.totals.value = transformPrice(result?.toMutableList()).value
+                Log.d("counting monthly","${counting}")
             }
             is UiState.Loading -> {}
         }

@@ -19,10 +19,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.parking.R
+import com.example.parking.ui.screen.home.HistoryCashDto
 import com.example.parking.ui.theme.BluePark
 
 @Composable
-fun CashPayment(modifier: Modifier = Modifier) {
+fun CashPayment(
+    modifier: Modifier = Modifier,
+    listHistory: MutableList<HistoryCashDto> = mutableListOf()
+) {
     Card(
         modifier = modifier
             .padding(16.dp)
@@ -51,15 +55,12 @@ fun CashPayment(modifier: Modifier = Modifier) {
                     .heightIn(max = 210.dp)
                     .padding(top = 10.dp)
             ) {
-                item { RepeatableItemRow(name = "Ujey", amount = 10000) }
-                item { RepeatableItemRow(name = "Ujey", amount = 10000) }
-                item { RepeatableItemRow(name = "Ujey", amount = 10000) }
-                item { RepeatableItemRow(name = "Ujey", amount = 10000) }
-                item { RepeatableItemRow(name = "Ujey", amount = 10000) }
-                item { RepeatableItemRow(name = "Ujey", amount = 10000) }
-                item { RepeatableItemRow(name = "Ujey", amount = 10000) }
-                item { RepeatableItemRow(name = "Ujey", amount = 10000) }
-                item { RepeatableItemRow(name = "Ujey", amount = 10000) }
+                listHistory.map {
+                    history ->
+                    item {
+                        RepeatableItemRow(name = history.userName, amount= history.amount )
+                    }
+                }
             }
         }
     }

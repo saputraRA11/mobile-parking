@@ -37,6 +37,7 @@ import com.example.parking.ui.component.MonthlyStatistics
 import com.example.parking.ui.component.ParkirArea
 import com.example.parking.ui.component.SliderStatistics
 import com.example.parking.ui.screen.home.Area
+import com.example.parking.ui.screen.payment.EasyparkHistory
 import com.example.parking.ui.screen.payment.ManagamenetHistoryDto
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.GreyShadow
@@ -48,7 +49,7 @@ fun PaymentManagementContent(
     homeClick: () -> Unit = {},
     detailAreaClick: (id:String) -> Unit = {},
     listArea: MutableList<Area> = mutableListOf(),
-    counting: MutableState<ManagamenetHistoryDto> = mutableStateOf(ManagamenetHistoryDto())
+    counting: MutableState<ManagamenetHistoryDto> = mutableStateOf(ManagamenetHistoryDto()),
 ) {
     Scaffold(
         topBar = {

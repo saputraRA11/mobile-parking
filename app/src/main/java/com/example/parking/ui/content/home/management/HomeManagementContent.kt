@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -34,6 +36,7 @@ import com.example.parking.ui.component.FabMenu
 import com.example.parking.ui.component.HeadLineManagement
 import com.example.parking.ui.component.ParkirArea
 import com.example.parking.ui.screen.home.Area
+import com.example.parking.ui.screen.home.HistoryCashDto
 import com.example.parking.ui.theme.BluePark
 import com.example.parking.ui.theme.GreyShadow
 
@@ -45,7 +48,8 @@ fun HomeManagementContent(
     addGuard: ()-> Unit = {},
     paymentClick: () -> Unit = {},
     updateArea:(id:String) -> Unit = {},
-    listArea: MutableList<Area> = mutableListOf()
+    listArea: MutableList<Area> = mutableListOf(),
+    listHistory:MutableState<MutableList<HistoryCashDto>> = mutableStateOf(mutableListOf())
 ) {
     Scaffold(
         topBar = {
@@ -143,7 +147,9 @@ fun HomeManagementContent(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    CashPayment()
+                    CashPayment(
+                        listHistory = listHistory.value
+                    )
                     ParkirArea(
                         modifier = Modifier.padding(start = 20.dp),
                         onClick = updateArea,
