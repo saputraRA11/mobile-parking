@@ -1,1 +1,12 @@
-Production environment
+stage environment
+
+RULES:
+
+	cara nambah feature:
+
+	1) buat branch baru dengan format: feature_{nama_feature}
+		git branch -b feature_{nama_feature}
+
+	2) setiap mau push pastiin pull dari stagging dulu supaya ngga conflict
+		git pull stagging atau git pull origin stagging
+
